@@ -1,24 +1,8 @@
-@font-face {
-	font-family: 'droid-sans-mono-pro';
-	src: url(data:font/woff2;base64,<!--# include file="droid-sans-mono-pro-regular.woff2.base64" -->) format('woff2');
-	font-weight: normal;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'droid-sans-mono-pro';
-	src: url(data:font/woff2;base64,<!--# include file="droid-sans-mono-pro-bold.woff2.base64" -->) format('woff2');
-	font-weight: bold;
-	font-style: normal;
-}
-
 body {
-	font-family: droid-sans-mono-pro;
-	font-variant-ligatures: no-common-ligatures;
-	font-size: 15px;
-	line-height: 1.25;
+	font-family: Monospace, Courier;
+	font-size: 16px;
 
-	max-width: 900px;  /* for pc */
+	max-width: 900px;
 
 	padding-left: 2ch;
 	padding-right: 3ch;
