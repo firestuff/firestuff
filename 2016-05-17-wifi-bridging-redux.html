@@ -1,0 +1,23 @@
+<!--# set var="title" value="WiFi bridging redux" -->
+<!--# set var="date" value="May 17, 2019" -->
+
+<!--# include file="include/top.html" -->
+
+<p>I previously wrote about building <a href="https://medium.com/where-the-flamingcow-roams/wifi-client-router-setup-9712a5f943e4#.z3wzhlub9">WiFi client routers</a> instead of bridges; they get you broadcast domain isolation and a degree of conceptual simplicity (no L2 tricks). I finally ran into a requirement on a different project to build an actual bridge; here’s how I did it.</p>
+
+<p>You can copy the hardware from the router post, or use what you’ve got; I don’t believe this is driver-specific.</p>
+
+<p>Your access point, however, does require support for this to work. It needs to:
+<ul>
+	<li>Make use of <a href="http://madwifi-project.org/wiki/AboutWDS">4-address WDS</a>. Basically, this means “don’t assume that the source MAC address of the ethernet frame and the source MAC address of the WLAN frame are the same”.</li>
+	<li>Allow frames where the ethernet and WLAN source MAC addresses differ (like above, but a policy decision).</li>
+	<li>Not assume that the WLAN MAC address is the only MAC at the other end of the link. This assumption is frequently used to reduce the effect of broadcast traffic in a WiFi environment by filtering. There may be settings like “Multicast optimization”, “Broadcast optimization”, or “DHCP optimization” that you need to turn off.</li>
+</ul>
+</p>
+
+<h3>Bridging</h3>
+
+<p>Linux supports bridging. There’s a bridge-utils package in Ubuntu with the tools you need:
+
+</p>
+<!--# include file="include/bottom.html" -->
