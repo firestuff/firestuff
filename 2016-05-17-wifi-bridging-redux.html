@@ -8,37 +8,48 @@
 <p>You can copy the hardware from the router post, or use what you’ve got; I don’t believe this is driver-specific.</p>
 
 <p>Your access point, however, does require support for this to work. It needs to:</p>
+
 <ul>
-	<li>Make use of <a href="http://madwifi-project.org/wiki/AboutWDS">4-address WDS</a>. Basically, this means “don’t assume that the source MAC address of the ethernet frame and the source MAC address of the WLAN frame are the same”.</li>
-	<li>Allow frames where the ethernet and WLAN source MAC addresses differ (like above, but a policy decision).</li>
-	<li>Not assume that the WLAN MAC address is the only MAC at the other end of the link. This assumption is frequently used to reduce the effect of broadcast traffic in a WiFi environment by filtering. There may be settings like “Multicast optimization”, “Broadcast optimization”, or “DHCP optimization” that you need to turn off.</li>
+<li>Make use of <a href="http://madwifi-project.org/wiki/AboutWDS">4-address WDS</a>. Basically, this means “don’t assume that the source MAC address of the ethernet frame and the source MAC address of the WLAN frame are the same”.</li>
+<li>Allow frames where the ethernet and WLAN source MAC addresses differ (like above, but a policy decision).</li>
+<li>Not assume that the WLAN MAC address is the only MAC at the other end of the link. This assumption is frequently used to reduce the effect of broadcast traffic in a WiFi environment by filtering. There may be settings like “Multicast optimization”, “Broadcast optimization”, or “DHCP optimization” that you need to turn off.</li>
 </ul>
 
 <h3>Bridging</h3>
 
-<p>Linux supports bridging. There’s a bridge-utils package in Ubuntu with the tools you need:
-<code>sudo apt-get install bridge-utils</code></p>
+<p>Linux supports bridging. There’s a bridge-utils package in Ubuntu with the tools you need:</p>
 
-<p>To see current bridges, run:
-<code>brcrl show</code></p>
+<pre><code>sudo apt-get install bridge-utils
+</code></pre>
 
-<p>However, you can’t normally add a WiFi interface to a bridge:
-<code>$ sudo brctl addif br0 eth0 wlan0
-can't add wlan0 to bridge br0: Operation not supported</code></p>
+<p>To see current bridges, run:</p>
+
+<pre><code>brcrl show
+</code></pre>
+
+<p>However, you can’t normally add a WiFi interface to a bridge:</p>
+
+<pre><code>$ sudo brctl addif br0 eth0 wlan0
+can't add wlan0 to bridge br0: Operation not supported
+</code></pre>
 
 <p>Googling this error produces a wide range of well-meaning yet completely unhelpful results.</p>
 
 <h3>Enable 4 address mode</h3>
 
-<p>To be able to add a WiFi interface to a bridge, you have to put it into 4-address mode first:
-<code># If necessary:
+<p>To be able to add a WiFi interface to a bridge, you have to put it into 4-address mode first:</p>
+
+<pre><code># If necessary:
 # sudo apt-get install iw
-sudo iw dev wlan0 set 4addr on</code></p>
+sudo iw dev wlan0 set 4addr on
+</code></pre>
 
 <p>From that point forward, the interface won’t be able to talk normally, and wpa_supplicant is likely to time out in the association phase (run “sudo wpa_cli” to watch its logs).</p>
 
-<p>Now add the interface to a bridge:
-<code>sudo brctl addif br0 wlan0</code></p>
+<p>Now add the interface to a bridge:</p>
+
+<pre><code>sudo brctl addif br0 wlan0
+</code></pre>
 
 <p>You should now be able to fetch an IP on br0 via DHCP. Unless, of course, you need wpa_supplicant to work…</p>
 
@@ -46,31 +57,36 @@ sudo iw dev wlan0 set 4addr on</code></p>
 
 <p>wpa_supplicant needs to be bridge-aware to work with 4-address mode. Fortunately, it has a flag (-b) to set the bridge interface. Unfortunately, this flag is broken in 2.1, the version in Ubuntu Trusty. I verified that it works in wpa_supplicant 2.5 built from source; I haven’t verified 2.4 from Xenial.</p>
 
-<p>A wpa_supplicant commandline looks something like:
-<code>wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf -C /var/run/wpa_supplicant -P /var/run/wpa_supplicant.wlan0.pid -b br0</code></p>
+<p>A wpa_supplicant commandline looks something like:</p>
+
+<pre><code>wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf -C /var/run/wpa_supplicant -P /var/run/wpa_supplicant.wlan0.pid -b br0
+</code></pre>
 
 <p>With that working, the interface should get to wpa_state=COMPLETED, and br0 should work normally. Remember that wlan0 will still be unusable directly.</p>
 
 <h3>Ordering</h3>
 
 <p>Bringing up these interfaces is tricky; the ordering is annoying.</p>
+
 <ul>
-	<li>4-address mode has to be on before you can add wlan0 to br0</li>
-	<li>br0 must exist before you can start wpa_supplicant</li>
-	<li>wpa_supplicant must be running before you can get an IP address on br0</li>
+<li>4-address mode has to be on before you can add wlan0 to br0</li>
+<li>br0 must exist before you can start wpa_supplicant</li>
+<li>wpa_supplicant must be running before you can get an IP address on br0</li>
 </ul>
 
 <h3>Putting it together</h3>
 
-<p>Because of the ordering issues, it’s easier to treat this all as one interface that has to come up together. Here’s an example interface stanza that does this:
-<code>auto br0
+<p>Because of the ordering issues, it’s easier to treat this all as one interface that has to come up together. Here’s an example interface stanza that does this:</p>
+
+<pre><code>auto br0
 iface br0 inet dhcp
   pre-up /sbin/iw dev wlan0 set 4addr on
   pre-up /sbin/brctl addbr $IFACE || true
   pre-up /sbin/start-stop-daemon --start --pidfile=/var/run/wpa_supplicant.wlan0.pid --exec=/usr/local/sbin/wpa_supplicant --user=root -- -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf -C /var/run/wpa_supplicant -P /var/run/wpa_supplicant.wlan0.pid -b $IFACE
   bridge_ports eth0 eth1 wlan0
   post-down /sbin/start-stop-daemon --stop --pidfile=/var/run/wpa_supplicant.wlan0.pid --exec=/usr/local/sbin/wpa_supplicant --user=root
-  post-down /sbin/iw dev wlan0 set 4addr off</code></p>
+  post-down /sbin/iw dev wlan0 set 4addr off&lt;/code&gt;&lt;/p&gt;
+</code></pre>
 
 <p>We use start-stop-daemon because it provides idempotence and safety from stale PID files.</p>
 

@@ -14,7 +14,7 @@ If you’re building system images, you’re going to do a lot of debootstrap, w
     export http_proxy=http://127.0.0.1:8000
     # Note that you'll need to re-export this before any use of debootstrap
 
-### Tell sudo to pass through http_proxy
+### Tell sudo to pass through http\_proxy
 
     sudo visudo
     # Add the line after the env_reset line:
