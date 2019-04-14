@@ -1,8 +1,22 @@
-<!--# include file="page-html.html" -->
-<!--# include file="page-head.html" -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<meta name="theme-color" content="#000000">
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+	<style>
+	<!--# include file="style.css" -->
+	</style>
+	<title><!--# echo var="title" default="where the flamingcow roams" --></title>
+</head>
 
 <body>
-<!--# include file="page-header.html" -->
+
+<header>
+	<h1><a href="https://firestuff.org/">where the flamingcow roams</a></h1>
+</header>
 
 <main>
 
@@ -10,4 +24,14 @@
 <article>
 <!--# endif -->
 
-<!--# include file="article-header.html" -->
+<!--# if expr="$date" -->
+<aside>
+	<h4><!--# echo var="date" --></h4>
+</aside>
+<!--# endif -->
+
+<!--# if expr="$title" -->
+<h2><!--# echo var="title" --></h2>
+<!--# endif -->
+
+<hr>
