@@ -1,0 +1,67 @@
+@font-face {
+	font-family: 'droid-sans-mono-pro';
+	src: url(data:font/woff2;base64,<!--# include file="droid-sans-mono-pro-regular.woff2.base64" -->) format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'droid-sans-mono-pro';
+	src: url(data:font/woff2;base64,<!--# include file="droid-sans-mono-pro-bold.woff2.base64" -->) format('woff2');
+	font-weight: bold;
+	font-style: normal;
+}
+
+body {
+	font-family: droid-sans-mono-pro;
+	font-variant-ligatures: no-common-ligatures;
+	font-size: 15px;
+	line-height: 1.25;
+
+	max-width: 900px;  /* for pc */
+
+	padding-left: 2ch;
+	padding-right: 3ch;
+	margin: 0 auto;
+
+	color: #d8d8d8;
+	background: black;
+}
+ 
+@media (max-width: 500px) { /* For small screen decices */
+	body {
+		font-size: 12px; 
+	}
+}   
+
+a {
+	color: #d8d8d8;
+	font-weight: bold;
+}
+
+img {
+	border: none;
+}
+
+p {
+	margin-top: 0px;
+	margin-bottom: 25pt;
+	text-align: justify;
+}
+
+sup {
+	vertical-align: 0.3em;
+	font-size: 0.65em;
+}   
+
+hr {
+	border-top: 0.1px solid white;
+}
+
+pre {
+	background-color: black; 
+	border: 1px solid white;
+	padding-left: 2ch;
+	padding-top: 1ch;
+	padding-bottom: 1ch;
+}
