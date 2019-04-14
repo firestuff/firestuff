@@ -7,17 +7,20 @@
 
 <h3>Install apt-cacher-ng</h3>
 
-<code>sudo apt-get install squid-deb-proxy</code>
+<pre><code>sudo apt-get install squid-deb-proxy
+</code></pre>
 
 <h3>Tell programs to use the proxy</h3>
 
-<code>export http_proxy=http://127.0.0.1:8000
-# Note that you'll need to re-export this before any use of debootstrap</code>
+<pre><code>export http_proxy=http://127.0.0.1:8000
+# Note that you'll need to re-export this before any use of debootstrap
+</code></pre>
 
 <h3>Tell sudo to pass through http_proxy</h3>
 
-<code>sudo visudo
+<pre><code>sudo visudo
 # Add the line after the env_reset line:
-Defaults env_keep += "http_proxy"</code>
+Defaults env_keep += "http_proxy"
+</code></pre>
 
 <!--# include file="include/bottom.html" -->
