@@ -52,13 +52,14 @@ h2 {
 	font-size: 16px;
 	font-weight: bold;
 	text-transform: uppercase;
-	margin-block-start: 0.5em;
-	margin-block-end: 0.5em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
 }
 
 h3 {
 	font-size: 16px;
 	font-weight: bold;
+	margin-top: 2em;
 }
 
 h4 {
@@ -73,4 +74,22 @@ h4 {
 
 ul li {
 	margin-bottom: 10px;
+}
+
+code {
+	display: block;
+	white-space: pre;
+
+	font-family: Monospace, Courier;
+	font-size: 16px;
+
+	background-color: #e8e8e8;
+	color: black;
+
+	border: 1px solid black; 
+
+	padding: 1ch;
+	margin: 1ch;
+
+	overflow: scroll;
 }
