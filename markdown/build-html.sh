@@ -4,6 +4,9 @@ BASEDIR=$(dirname $0)
 
 for FILE in $BASEDIR/*.md; do
 	BASENAME=$(basename $FILE)
+	if [[ $BASENAME == 'template.md' ]]; then
+		continue
+	fi
 	OUTNAME=${BASENAME%.md}.html
 	echo "$BASENAME -> $OUTNAME"
 	TEMP=$(tempfile --dir=$BASEDIR --mode=0644 --suffix=.tmp)

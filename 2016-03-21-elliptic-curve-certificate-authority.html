@@ -1,37 +1,24 @@
-<!--# set var="title" value="EC CA redux: now with more Nitrokey" -->
-<!--# set var="date" value="March 27, 2016" -->
+<!--# set var="title" value="Elliptic Curve Certificate Authority" -->
+<!--# set var="date" value="March 21, 2016" -->
 
 <!--# include file="include/top.html" -->
 
-<p>This is a revisit on my doc on <a href="https://medium.com/where-the-flamingcow-roams/elliptic-curve-certificate-authority-bbdb9c3855f7#.4z3bzvz6e">how to set up an EC CA</a>. In this version, we’re using the <a href="https://shop.nitrokey.com/shop/product/nitrokey-hsm-7">Nitrokey HSM</a> for key generation, storage, and operations. You’ll need two Nitrokey HSMs. You can get away with one, but there’s not a lot of point to splitting root and intermediate certs if you then keep them on the same device. You’ll also need a <a href="https://medium.com/where-the-flamingcow-roams/nitrokey-hsm-ec-setup-6ed9b9e43c36#.pgal18rvh">system set up</a> to talk to the Nitrokey, which is a bit tricky.</p>
-
-<p>If you do this right, you can set up a CA where the keys never touched computer that you’re using to host the CA; they only ever reside protected in the Nitrokey.</p>
-
-<p>You have a choice between making the keys unexportable, or supporting a <a href="https://github.com/OpenSC/OpenSC/wiki/SmartCardHSM#using-key-backup-and-restore">backup scheme</a>. Choose wisely, because you can’t change later. If you’re choosing the former, make sure you can answer “what is my plan if the Nitrokey breaks?”.</p>
-
-<p>There’s one material difference from the other instructions: the Nitrokey HSM only supports up to 320-bit EC keys, so we can’t use P-384 (secp384r1) as we did in the other instructions. We’ll be using P-256 (prime256v1) instead.</p>
-
-<p>XXXX is still our placeholder of choice.</p>
+<p>Notes from setting up a two-level (root and intermediate) CA using EC certs, combined from two decent sets of instructions <a href="https://jamielinux.com/docs/openssl-certificate-authority/introduction.html">here</a> and <a href="https://wiki.openssl.org/index.php/Command_Line_Elliptic_Curve_Operations">here</a>. This is the CliffsNotes version; see those two docs for more detail. XXXX is used as a placeholder here; search for it and replace.</p>
 
 <h3>Create directory structure</h3>
 
 <pre><code>mkdir ca
 cd ca
-mkdir -p {root,intermediate}/{certs,crl,csr,newcerts}
+mkdir -p {root,intermediate}/{certs,crl,csr,newcerts,private}
 mkdir -p {client,server}/{certs,csr,pfx,private}
 touch {root,intermediate}/database
 echo 1000 | tee {root,intermediate}/{serial,crlnumber}
-chmod 700 {client,server}/private
-</code></pre>
-
-<h3>Create openssl.cnf</h3>
-
-<pre><code>cat &gt; openssl.cnf &amp;lt;&amp;lt;'END'
-openssl_conf = openssl_init
-[ openssl_init ]
-engines = engines
+chmod 700 {root,intermediate,client,server}/private
+Create openssl.cnf
+cat &gt; openssl.cnf &lt;&lt;'END'
 [ ca ]
 default_ca = ca_intermediate
+
 [ ca_root ]
 dir               = root
 certs             = $dir/certs
@@ -40,7 +27,7 @@ new_certs_dir     = $dir/newcerts
 database          = $dir/database
 serial            = $dir/serial
 crlnumber         = $dir/crlnumber
-private_key       = label_root
+private_key       = $dir/private/root.key.pem
 certificate       = $dir/certs/root.cert.pem
 crl               = $dir/crl/root.crl.pem
 crl_extensions    = ext_crl
@@ -51,6 +38,7 @@ default_crl_days  = 30
 default_days      = 3650
 preserve          = no
 policy            = policy_strict
+
 [ ca_intermediate ]
 dir               = intermediate
 certs             = $dir/certs
@@ -59,7 +47,7 @@ new_certs_dir     = $dir/newcerts
 database          = $dir/database
 serial            = $dir/serial
 crlnumber         = $dir/crlnumber
-private_key       = label_intermediate
+private_key       = $dir/private/intermediate.key.pem
 certificate       = $dir/certs/intermediate.cert.pem
 crl               = $dir/crl/intermediate.crl.pem
 crl_extensions    = ext_crl
@@ -70,6 +58,7 @@ default_crl_days  = 30
 default_days      = 375
 preserve          = no
 policy            = policy_loose
+
 [ policy_strict ]
 countryName             = match
 stateOrProvinceName     = match
@@ -77,6 +66,7 @@ organizationName        = match
 organizationalUnitName  = optional
 commonName              = supplied
 emailAddress            = optional
+
 [ policy_loose ]
 countryName             = optional
 stateOrProvinceName     = optional
@@ -85,11 +75,13 @@ organizationName        = optional
 organizationalUnitName  = optional
 commonName              = supplied
 emailAddress            = optional
+
 [ req ]
 default_bits        = 2048
 string_mask         = utf8only
 default_md          = sha256
 distinguished_name  = req_distinguished_name
+
 [ req_distinguished_name ]
 countryName                     = Country Name (2 letter code)
 stateOrProvinceName             = State or Province Name
@@ -98,16 +90,19 @@ localityName                    = Locality Name
 organizationalUnitName          = Organizational Unit Name
 commonName                      = Common Name
 emailAddress                    = Email Address
+
 [ ext_root ]
 subjectKeyIdentifier    = hash
 authorityKeyIdentifier  = keyid:always, issuer
 basicConstraints        = critical, CA:true
 keyUsage                = critical, digitalSignature, cRLSign, keyCertSign
+
 [ ext_intermediate ]
 subjectKeyIdentifier    = hash
 authorityKeyIdentifier  = keyid:always, issuer
 basicConstraints        = critical, CA:true, pathlen:0
 keyUsage                = critical, digitalSignature, cRLSign, keyCertSign
+
 [ ext_client ]
 basicConstraints        = CA:FALSE
 nsCertType              = client, email
@@ -116,6 +111,7 @@ subjectKeyIdentifier    = hash
 authorityKeyIdentifier  = keyid, issuer
 keyUsage                = critical, nonRepudiation, digitalSignature, keyEncipherment
 extendedKeyUsage        = clientAuth, emailProtection
+
 [ ext_server ]
 basicConstraints        = CA:FALSE
 nsCertType              = server
@@ -124,41 +120,30 @@ subjectKeyIdentifier    = hash
 authorityKeyIdentifier  = keyid, issuer:always
 keyUsage                = critical, digitalSignature, keyEncipherment
 extendedKeyUsage        = serverAuth
+
 [ ext_crl ]
 authorityKeyIdentifier  = keyid:always
+
 [ ext_ocsp ]
 basicConstraints        = CA:FALSE
 subjectKeyIdentifier    = hash
 authorityKeyIdentifier  = keyid, issuer
 keyUsage                = critical, digitalSignature
 extendedKeyUsage        = critical, OCSPSigning
-[ engines ]
-pkcs11 = engine_pkcs11
-[ engine_pkcs11 ]
-engine_id     = pkcs11
-dynamic_path  = /usr/lib/arm-linux-gnueabihf/openssl-1.0.0/engines/libpkcs11.so
-MODULE_PATH   = /usr/local/lib/pkcs11/opensc-pkcs11.so
-init          = 0
 END
-</code></pre>
-
-<h3>Tell future commands to use your new conf file</h3>
-
-<pre><code>export OPENSSL_CONF=openssl.cnf
 </code></pre>
 
 <h3>Create a root key</h3>
 
-<p>Insert your root HSM.</p>
-
-<pre><code>/usr/local/bin/pkcs11-tool --module /usr/local/lib/opensc-pkcs11.so --login --keypairgen --key-type EC:prime256v1 --label root
-# Enter PIN
+<pre><code>openssl ecparam -name secp384r1 -genkey | openssl ec -aes-256-cbc -out root/private/root.key.pem
+# Create strong root key password
+chmod 400 root/private/root.key.pem
 </code></pre>
 
 <h3>Create a self-signed root cert</h3>
 
-<pre><code>openssl req -engine pkcs11 -keyform engine -key label_root -new -extensions ext_root -out root/certs/root.cert.pem -x509 -subj '/C=US/ST=California/O=XXXX/OU=XXXX Certificate Authority/CN=XXXX Root CA' -days 7300
-# Enter PIN
+<pre><code>openssl req -config openssl.cnf -key root/private/root.key.pem -new -extensions ext_root -out root/certs/root.cert.pem -x509 -subj '/C=US/ST=California/O=XXXX/OU=XXXX Certificate Authority/CN=XXXX Root CA' -days 7300
+# Enter root key password
 chmod 444 root/certs/root.cert.pem
 </code></pre>
 
@@ -172,37 +157,27 @@ chmod 444 root/certs/root.cert.pem
 <ul>
 <li>Expiration date (20 years in future)</li>
 <li>Signature algorithm (ecdsa-with-SHA256)</li>
-<li>Public key size (256 bit)</li>
+<li>Public key size (384 bit)</li>
 <li>CA:TRUE</li>
 </ul>
 
-<h3>Import root cert onto HSM</h3>
-
-<pre><code>openssl x509 -in root/certs/root.cert.pem -out root/certs/root.cert.der -outform der
-/usr/local/bin/pkcs11-tool --module /usr/local/lib/opensc-pkcs11.so --login --write-object root/certs/root.cert.der --type cert --label root
-# Enter PIN
-</code></pre>
-
 <h3>Create an intermediate key</h3>
 
-<p>Insert your intermediate HSM</p>
-
-<pre><code>/usr/local/bin/pkcs11-tool --module /usr/local/lib/opensc-pkcs11.so --login --keypairgen --key-type EC:prime256v1 --label intermediate
-# Enter PIN
+<pre><code>openssl ecparam -name secp384r1 -genkey | openssl ec -aes-256-cbc -out intermediate/private/intermediate.key.pem
+# Create strong intermediate key password
+chmod 400 intermediate/private/intermediate.key.pem
 </code></pre>
 
 <h3>Create an intermediate certificate signing request (CSR)</h3>
 
-<pre><code>openssl req -engine pkcs11 -keyform engine -new -key label_intermediate -out intermediate/csr/intermediate.csr.pem  -subj '/C=US/ST=California/O=XXXX/OU=XXXX Certificate Authority/CN=XXXX Intermediate'
-# Enter PIN
+<pre><code>openssl req -config openssl.cnf -new -key intermediate/private/intermediate.key.pem -out intermediate/csr/intermediate.csr.pem  -subj '/C=US/ST=California/O=XXXX/OU=XXXX Certificate Authority/CN=XXXX Intermediate'
+# Enter intermediate key password
 </code></pre>
 
 <h3>Sign intermediate cert with root key</h3>
 
-<p>Insert your root HSM</p>
-
-<pre><code>openssl ca -engine pkcs11 -keyform engine -name ca_root -extensions ext_intermediate -notext -in intermediate/csr/intermediate.csr.pem -out intermediate/certs/intermediate.cert.pem
-# Enter PIN
+<pre><code>openssl ca -config openssl.cnf -name ca_root -extensions ext_intermediate -notext -in intermediate/csr/intermediate.csr.pem -out intermediate/certs/intermediate.cert.pem
+# Enter root key password
 chmod 444 intermediate/certs/intermediate.cert.pem
 </code></pre>
 
@@ -217,33 +192,16 @@ openssl verify -CAfile root/certs/root.cert.pem intermediate/certs/intermediate.
 <ul>
 <li>Expiration date (10 years in future)</li>
 <li>Signature algorithm (ecdsa-with-SHA256)</li>
-<li>Public key size (256 bit)</li>
+<li>Public key size (384 bit)</li>
 <li>CA:TRUE</li>
 <li>OK</li>
 </ul>
-
-<h3>Import root &amp; intermediate certs onto HSM</h3>
-
-<p>Insert your intermediate HSM</p>
-
-<pre><code>openssl x509 -in intermediate/certs/intermediate.cert.pem -out intermediate/certs/intermediate.cert.der -outform der
-/usr/local/bin/pkcs11-tool --module /usr/local/lib/opensc-pkcs11.so --login --write-object root/certs/root.cert.der --type cert --label root
-# Enter PIN
-/usr/local/bin/pkcs11-tool --module /usr/local/lib/opensc-pkcs11.so --login --write-object intermediate/certs/intermediate.cert.der --type cert --label intermediate
-# Enter PIN
-</code></pre>
 
 <h3>Create a chain certificate file</h3>
 
 <pre><code>cat intermediate/certs/intermediate.cert.pem root/certs/root.cert.pem &gt; intermediate/certs/chain.cert.pem
 chmod 444 intermediate/certs/chain.cert.pem
 </code></pre>
-
-<h3>CA setup done!</h3>
-
-<p>Take your root HSM, if you have a separate one, and lock it in a safe somewhere; you won’t need it for regular use.</p>
-
-<p>The following steps are examples of how to use your new CA.</p>
 
 <h3>Create a client key</h3>
 
@@ -256,13 +214,13 @@ chmod 400 client/private/test1.key.pem
 
 <h3>Create a client certificate signing request (CSR)</h3>
 
-<pre><code>openssl req -new -key client/private/test1.key.pem -out client/csr/test1.csr.pem  -subj '/C=US/ST=California/O=XXXX/OU=XXXX Test/CN=XXXX Test 1'
+<pre><code>openssl req -config openssl.cnf -new -key client/private/test1.key.pem -out client/csr/test1.csr.pem  -subj '/C=US/ST=California/O=XXXX/OU=XXXX Test/CN=XXXX Test 1'
 </code></pre>
 
 <h3>Sign client cert with intermediate key</h3>
 
-<pre><code>openssl ca -engine pkcs11 -keyform engine -extensions ext_client -notext -in client/csr/test1.csr.pem -out client/certs/test1.cert.pem
-# Enter PIN
+<pre><code>openssl ca -config openssl.cnf -extensions ext_client -notext -in client/csr/test1.csr.pem -out client/certs/test1.cert.pem
+# Enter intermediate key password
 chmod 444 client/certs/test1.cert.pem
 </code></pre>
 
@@ -292,9 +250,9 @@ openssl verify -CAfile intermediate/certs/chain.cert.pem client/certs/test1.cert
 
 <h3>Generate a certificate revocation list (CRL)</h3>
 
-<p>Initially empty. You can also do this for your root CA (with its HSM inserted).</p>
+<p>Initially empty. You can also do this for your root CA.</p>
 
-<pre><code>openssl ca -engine pkcs11 -keyform engine -gencrl -out intermediate/crl/intermediate.crl.pem
+<pre><code>openssl ca -config openssl.cnf -gencrl -out intermediate/crl/intermediate.crl.pem
 </code></pre>
 
 <h3>Verify certificate revocation list</h3>
@@ -320,14 +278,14 @@ openssl verify -CAfile intermediate/certs/chain.cert.pem client/certs/test1.cert
 
 <p>Revoke it:</p>
 
-<pre><code>openssl ca -engine pkcs11 -keyform engine -revoke intermediate/newcerts/YYYY.pem
-# Enter PIN
+<pre><code>openssl ca -config openssl.cnf -revoke intermediate/newcerts/YYYY.pem
+# Enter intermediate key password
 </code></pre>
 
 <p>Generate a new CRL file:</p>
 
-<pre><code>openssl ca -engine pkcs11 -keyform engine -gencrl -out intermediate/crl/intermediate.crl.pem
-# Enter PIN
+<pre><code>openssl ca -config openssl.cnf -gencrl -out intermediate/crl/intermediate.crl.pem
+# Enter intermediate key password
 </code></pre>
 
 <!--# include file="include/bottom.html" -->
