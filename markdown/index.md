@@ -8,5 +8,6 @@
 1. 2016-Mar-27: [EC CA redux: now with more Nitrokey](2016-03-27-ec-ca-redux-now-with-more-nitrokey.html)
 1. 2016-Mar-26: [Nitrokey HSM EC setup](2016-03-26-nitrokey-hsm-ec-setup.html)
 1. 2016-Mar-21: [Elliptic Curve Certificate Authority](2016-03-21-elliptic-curve-certificate-authority.html)
+1. 2016-Mar-17: [Raspberry Pi 3 + Serial Console](2016-03-17-raspberry-pi-3-serial-console.html)
 
 <!--# include file="include/bottom.html" -->
