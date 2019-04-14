@@ -75,7 +75,7 @@ Because of the ordering issues, it’s easier to treat this all as one interface
       pre-up /sbin/start-stop-daemon --start --pidfile=/var/run/wpa_supplicant.wlan0.pid --exec=/usr/local/sbin/wpa_supplicant --user=root -- -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf -C /var/run/wpa_supplicant -P /var/run/wpa_supplicant.wlan0.pid -b $IFACE
       bridge_ports eth0 eth1 wlan0
       post-down /sbin/start-stop-daemon --stop --pidfile=/var/run/wpa_supplicant.wlan0.pid --exec=/usr/local/sbin/wpa_supplicant --user=root
-      post-down /sbin/iw dev wlan0 set 4addr off</code></p>
+      post-down /sbin/iw dev wlan0 set 4addr off
 
 We use start-stop-daemon because it provides idempotence and safety from stale PID files.
 
