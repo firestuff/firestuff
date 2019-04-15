@@ -10,5 +10,6 @@
 1. 2016-Mar-21: [Elliptic Curve Certificate Authority](2016-03-21-elliptic-curve-certificate-authority.html)
 1. 2016-Mar-17: [Raspberry Pi 3 + Serial Console](2016-03-17-raspberry-pi-3-serial-console.html)
 1. 2016-Mar-13: [WiFi client router setup](2016-03-13-wifi-client-router-setup.html)
+1. 2016-Mar-13: [Raspbian setup notes](2016-03-13-raspbian-setup-notes.html)
 
 <!--# include file="include/bottom.html" -->

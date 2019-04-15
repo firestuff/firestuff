@@ -1,0 +1,209 @@
+<!--# set var="title" value="Raspbian setup notes" -->
+<!--# set var="date" value="March 13, 2016" -->
+
+<!--# include file="include/top.html" -->
+
+<p>I’ve been growing a document of setup notes for a new Raspberry Pi running Raspbian for awhile. Raspberry Pis are a problem for me, because it’s easy to have lots of them doing lots of tasks, so I do, everywhere. I thought I’d publish these notes, glommed together from various sources, in case they’re useful for others.</p>
+
+<p>While many of these may work on other hardware and software, they’re regularly tested on <a href="https://www.raspberrypi.org/products/raspberry-pi-2-model-b/">Raspberry Pi 2 Model B</a> with Raspbian Lite Jessie.</p>
+
+<p>I should really script this.</p>
+
+<p>Start with <a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian Lite</a>. NOOBS has an extra boot step, and Raspbian full version has a GUI and stuff like Wolfram Engine that you probably don’t want.</p>
+
+<h3>Log in</h3>
+
+<p>Use console, or grab the IP from your router’s DHCP client list and:</p>
+
+<pre><code>ssh pi@&lt;ip address&gt;
+# password "raspberry"
+</code></pre>
+
+<h3>Expand filesystem</h3>
+
+<pre><code>sudo raspi-config --expand-rootfs
+sudo reboot
+</code></pre>
+
+<p>Wait for reboot. Reconnect as above.</p>
+
+<h3>Update</h3>
+
+<pre><code>sudo apt-get -y update
+sudo apt-get -y dist-upgrade
+</code></pre>
+
+<h3>Update firmware</h3>
+
+<pre><code>sudo apt-get -y install rpi-update
+sudo rpi-update
+</code></pre>
+
+<h3>Enable overclock (optional)</h3>
+
+<p>Pis seem to be relatively stable overclocked, even without a heatsink.</p>
+
+<pre><code>sudo raspi-config
+# Select "8 Overclock"
+# Select "&lt;Ok&gt;"
+# Select "High"
+# Select "&lt;Ok&gt;"
+# Select "&lt;Finish&gt;"
+# Select "&lt;No&gt;"
+</code></pre>
+
+<h3>Disable swap</h3>
+
+<pre><code>sudo dphys-swapfile uninstall
+</code></pre>
+
+<h3>Create a new user</h3>
+
+<pre><code>sudo adduser &lt;username&gt;
+# Follow prompts
+sudo usermod --append --groups sudo &lt;username&gt;
+</code></pre>
+
+<h3>SSH in as the new user</h3>
+
+<pre><code># ON YOUR PI
+# Find your Pi's current IP, you don't know it
+ifconfig
+# ON ANOTHER MACHINE
+# If you don't already have an SSH key pair
+ssh-keygen -t ed25519
+cat ~/.ssh/id_ed25519.pub
+# Copy your key to your Pi
+ssh &lt;username&gt;@&lt;ip&gt; mkdir .ssh
+# Enter password
+scp ~/.ssh/id_ed25519.pub &lt;username&gt;@&lt;ip&gt;:.ssh/authorized_keys
+# Enter password
+# Connect to your Pi; this should NOT ask for a password
+ssh &lt;username&gt;@&lt;ip&gt;
+</code></pre>
+
+<h3>Lock down sshd</h3>
+
+<p>The SSH server has a lot of options turned on by default for compatibility with a wide range of clients. If you’re connecting only from modern machines, and you’ve gotten public key authentication working as described above (and tested it!), then you can turn off lots of the legacy options.</p>
+
+<pre><code>sudo tee /etc/ssh/sshd_config &lt;&lt;END
+Port 22
+Protocol 2
+HostKey /etc/ssh/ssh_host_ed25519_key
+UsePrivilegeSeparation sandbox
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+# Authentication:
+LoginGraceTime 120
+PermitRootLogin no
+StrictModes yes
+AuthenticationMethods publickey
+RSAAuthentication no
+PubkeyAuthentication yes
+IgnoreRhosts yes
+RhostsRSAAuthentication no
+HostbasedAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+PasswordAuthentication no
+X11Forwarding no
+X11DisplayOffset 10
+PrintMotd no
+PrintLastLog yes
+TCPKeepAlive yes
+AcceptEnv LANG LC_*
+UsePAM yes
+KexAlgorithms curve25519-sha256@libssh.org
+Ciphers chacha20-poly1305@openssh.com
+MACs hmac-sha2-512-etm@openssh.com
+END
+# Enter password for sudo
+</code></pre>
+
+<h3>Enable the hardware random number generator</h3>
+
+<p>Note that hardware random number generators <a href="https://en.wikipedia.org/wiki/RdRand#Reception">are controversial</a>.</p>
+
+<pre><code>sudo modprobe bcm2835_rng
+echo bcm2835_rng | sudo tee --append /etc/modules
+sudo apt-get -y install rng-tools
+</code></pre>
+
+<h3>Enable the hardware watchdog</h3>
+
+<p>This has false negatives (failures to reboot when it should) for me, but never false positives.</p>
+
+<pre><code>sudo apt-get -y install watchdog
+sudo tee --append /etc/watchdog.conf &lt;&lt;END
+watchdog-device = /dev/watchdog
+END
+</code></pre>
+
+<h3>Enable automatic updates</h3>
+
+<pre><code>sudo apt-get -y install unattended-upgrades
+sudo dpkg-reconfigure -plow unattended-upgrades
+# Choose "&lt;Yes&gt;"
+</code></pre>
+
+<h3>Disable avahi</h3>
+
+<p>You didn’t need mdns, did you?</p>
+
+<pre><code>sudo systemctl disable avahi-daemon.service
+</code></pre>
+
+<h3>Disable triggerhappy</h3>
+
+<p>You didn’t need volume buttons, did you?</p>
+
+<pre><code>sudo systemctl disable triggerhappy.service
+</code></pre>
+
+<h3>Disable frequency scaling</h3>
+
+<p>If you’re not planning to run on battery; this thing is slow enough anyway.</p>
+
+<pre><code>sudo apt-get -y install cpufrequtils
+sudo tee --append /etc/default/cpufrequtils &lt;&lt;END
+GOVERNOR="performance"
+END
+</code></pre>
+
+<h3>Enable lldpd</h3>
+
+<p>This allows you to observe network topology if you have managed switches.</p>
+
+<pre><code>sudo apt-get -y install lldpd
+sudo tee --append /etc/default/lldp &lt;&lt;END
+DAEMON_ARGS="-c"
+END
+</code></pre>
+
+<h3>Remove the pi user</h3>
+
+<p>Well-known username, well-known password, no thank you.</p>
+
+<pre><code>sudo deluser pi
+</code></pre>
+
+<h3>Install busybox-syslogd</h3>
+
+<p>You give up persistent syslogs, but you reduce SD writes. You can still run “logread” to read logs since boot from RAM.</p>
+
+<pre><code>sudo apt-get -y install busybox-syslogd
+</code></pre>
+
+<h3>Reboot</h3>
+
+<p>Test that changes work, and have some (disabling auto-login) take effect.</p>
+
+<pre><code>sudo reboot
+</code></pre>
+
+<h3>After reboot</h3>
+
+<p>Note that ssh may scream “REMOTE HOST IDENTIFICATION HAS CHANGED!”; that’s a symptom of the sshd_config changes above. Just remove the line from the known_hosts file and reconnect.</p>
+
+<!--# include file="include/bottom.html" -->
