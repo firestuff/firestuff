@@ -1,0 +1,54 @@
+<!--# set var="title" value="(Wireless) network optimization, 2010 edition" -->
+<!--# set var="date" value="April 7, 2010" -->
+
+<!--# include file="include/top.html" -->
+
+<p>After getting the Internet connection all tuned up, it's time to talk network speed.</p>
+
+<h3>How fast do you need to go?</h3>
+
+<p>Talking about gigabit speeds around the office drew some incredulity. Most users seem to be used to talking about Internet connection speeds in the sub-10mbit range, so a 10mbit hub (which my new apartment came prewired with) and 802.11b (6mbit/s TCP) or at least 802.11g (~30mbit/s TCP) will pretty much suffice. Political arguments about the mess that is US last-mile Internet connections aside, however, there are expensive options at higher speeds. Some areas have FiOS (though Verizon has apparently stopped rolling it out), and Comcast has a 50mbit/s "Extreme" plan in my area for $115/month. DOCSIS 3 supports up to ~160mbit/s link speed. Broadband speeds don't obey Moore's law (mostly due to the enormous infrastructure investment required to deploy new tech), but we'll still probably see cable plans breaking the 100mbit/s barrier in 3 or 4 years max. In short, it's a gigabit ethernet (~700mbit/s in real life) and 802.11n (~150mbit/s with today's gear) world for the short- to medium-term.</p>
+
+<h3>Defining your users</h3>
+
+<p>My use cases for wireless at home divide pretty neatly into two categories: high-bandwidth, low-latency streaming to fixed points (Mac Minis hooked up to my TVs), and bursty-bandwidth, can-survive-momentary-latency clients that move around a lot (laptop, cellphone, iPad). I'd like both to be able to max out my Internet connection, but the video streaming needs to be able to do better inside my network (streaming from my iMac). This may get murkier once Apple get iTunes streaming to the iPad working.</p>
+
+<h3>The first hop</h3>
+
+<p>No amount of optimization on the wireless side is going to help if the cable modem to router hop can't push the full speed of the 'net connection (this presumes that they're two different devices for you). First, both should support GigE (I have a Motorola SB6120 and a D-Link DIR-855). It's harder than it should be to verify the connection speed between these two; in the end, I had to force the link on the router end to 1000mbit/s-only, then make sure it still connected.</p>
+
+<p>My apartment isn't wired ideally, so the cable modem and router are in different places. The apartment has ethernet throughout, but it's only wired with 2 pairs (out of the 4 pairs in an RJ45 connector); that's only sufficient for 100mbit/s links. Kacirek brought over the toolkit and we appropriated some telephone wiring to serve as the extra two pairs, replacing the 10mbit hub with an ethernet coupler.</p>
+
+<h3>Going N-only</h3>
+
+<p>The 802.11b to 802.11g migration was a mess; networks effectively dropped back to all-B in the presence of even a single B device. G to N isn't as bad, but it's not great; 802.11 continues to accumulate backwards-compatibility hacks all over the place. However, I was surprised to find that every device except my old T60 supports N, including my Nexus One. It didn't ship with the support, and Google never indicated that an upgrade to it was forthcoming, but it must have snuck out with a firmware upgrade somewhere. After digging out an old 802.11n mini-PCI card that I bought years ago and upgrading the T60, I was able to switch from G/N to just N. This is probably a significant win, if you can manage to upgrade all your devices. If not, confining the older ones to 2.4GHz (leaving 5GHz to pure-N, rather than A/N) is probably your best bet.</p>
+
+<h3>There's N, then there's N</h3>
+
+<p>802.11n has to be one of the most consumer-confusing specs ever. N works by using multiple antennas to build virtual "spatial streams". For example, radio one has antennas 1A and 1B; radio two has 2A, 2B and 2C. The silicon supports 2 spatial channels, which get built between, e.g. 1A and 2B, 1B and 2C. These spatial channels are treated as separate links, even though they're on the same frequency. There are 16 possible antenna/radio configurations and 30 antenna/radio/spatial channel configurations. The configurations are abbreviated AxB:C (A: transmit radios/antennas, B: receive radios/antennas, C: processor-supported spatial channels). The spec goes up to 4x4:4. Unfortunately, this means that 3-antenna systems aren't necessarily 3-stream (and most sold today aren't). You can't have more streams than your lowest radio/antenna count, and your maximum speed is determined by your number of streams and frequency width. N can use 20MHz or 40MHz of radio spectrum. The DIR-855 I bought seems to be either 2x3:2 or 3x3:2; 300mbit/s max at 40MHz. It seems to be impossible to buy 3- or 4-stream consumer gear at the moment (and you need client gear to support it, so it wouldn't be too useful).</p>
+
+<h3>2.4GHz vs. 5GHz</h3>
+
+<p>802.11n makes the frequency choice even harder than it used to be. 2.4GHz is an overpopulated ghetto unless you live on double-digit acreage. It penetrates walls significantly better than 5GHz, but that's a blessing and a curse: you can use it from further away, but your neighbors interfere from further away. Even worse, at 40MHz, 802.11n takes 2 of the 3 non-overlapping 2.4GHz channels. That means that if you can see two or more neighboring access points, you're not getting full speed. The penetration advantages are significant, though: my iPad gets 6mbit/s link speed on 5GHz at the furthest point in my apartment from my access point. At 2.4GHz, it gets 26mbit/s.</p>
+
+<p>Dual-band solutions help, but you have to be careful. Assign different SSIDs to your 2.4GHz and 5GHz networks, so you can force clients to one or the other. Put things like video streaming in 5GHz, where a neighbor download isn't likely to cause hiccups. Test your other devices at maximum range, and see whether you can live with the 5GHz signal level.</p>
+
+<h3>A little more range</h3>
+
+<p>If you'd like to squeak just a little more range out of your access point, either to be able to use 5GHz where you would've used 2.4GHz, or to be able to reach far-away spots with anything at all, consider replacement antennas. Higher-grade access points support them, and they'll buy you a little bit, though don't expect miracles. I picked up 3 of these, which help a bit without taking it to ridiculous extremes.</p>
+
+<h3>Other optimizations</h3>
+
+<p>Location, location, location: put your access point in the middle of your coverage area. It's the simplest thing you can do to get massive speed gains.</p>
+
+<p>Make sure 802.11n short guard interval is enabled: without it, you lose about 10% of speed.</p>
+
+<p>Plug it in: if you can wire it, do. This is especially true for things like home fileservers, as wiring things that you copy from to wireless effectively doubles your transfer speed and halves your latency.</p>
+
+<p>Screw the neighbors: some access points have options to disable being friendly to other 802.11a/b/g devices.</p>
+
+<p>Disable all the complex router filtering: turn off web filtering, try things without QoS, disable the "firewall" and "security" features. Usually processors in routers are pretty light-weight, and you can be wasting CPU time on faux-security that could be spent moving more packets faster.</p>
+
+<p>Fix DNS: good chunks of interactive browsing time is spent waiting for DNS servers. Your router may be doing DNS relaying (running a local DNS server); try with and without it, to see if it sucks. If your ISP's DNS servers suck, try Google Public DNS; it's further from you network-wise, so it can't possibly be as fast as your ISP's DNS servers could be, but it's quite likely faster than they actually are.</p>
+
+<!--# include file="include/bottom.html" -->
