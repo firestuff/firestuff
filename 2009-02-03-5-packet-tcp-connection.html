@@ -1,0 +1,18 @@
+<!--# set var="title" value="5-packet TCP connection?" -->
+<!--# set var="date" value="February 3, 2009" -->
+
+<!--# include file="include/top.html" -->
+
+<p>This seems to be valid:</p>
+
+<ol>
+<li>C->S: SYN</li>
+<li>S->C: SYN/ACK</li>
+<li>C->S: FIN/ACK</li>
+<li>S->C: FIN/ACK</li>
+<li>C->S: ACK</li>
+</ol>
+
+<p>A completely opened and closed TCP connection. Further, 2 and 3 can both contain data? Could you get a whole HTTP request/response in this conversation?</p>
+
+<!--# include file="include/bottom.html" -->
