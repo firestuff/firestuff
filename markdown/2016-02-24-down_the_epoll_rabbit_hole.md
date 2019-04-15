@@ -1,0 +1,165 @@
+<!--# set var="title" value="Down the epoll rabbit hole" -->
+<!--# set var="date" value="February 24, 2016" -->
+
+<!--# include file="include/top.html" -->
+
+This is an in-depth dive into the actual observed behavior and interaction of epoll\_\*(), dup(), shutdown(), and close(). Because there are enough permutations of these already, I’m only covering one socket type (IPv4/AF\_INET, TCP/SOCK\_STREAM), one platform (x86\_64), and one kernel version (4.2.0). YMMV.
+
+I’ll be showing observed behavior through strace and tcpdump output.
+
+### Setup
+
+Our test environment starts with two sockets connected to each other. There’s also a listening socket, only used to accept the initial connection, and an epoll fd. Both of the connected sockets are added to the epoll watch set, with most possible level-triggered flags enabled.
+
+    # signal(SIGPIPE, SIG_IGN);
+	rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7fb859b662f0}, {SIG_DFL, [], 0}, 8) = 0
+	epoll_create1(0)                        = 3
+	socket(PF_INET, SOCK_STREAM, IPPROTO_IP) = 4
+	setsockopt(4, SOL_SOCKET, SO_REUSEPORT, [1], 4) = 0
+	bind(4, {sa_family=AF_INET, sin_port=htons(6789), sin_addr=inet_addr("127.0.0.1")}, 16) = 0
+	listen(4, 10)                           = 0
+	socket(PF_INET, SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_IP) = 5
+	connect(5, {sa_family=AF_INET, sin_port=htons(6789), sin_addr=inet_addr("127.0.0.1")}, 16) = -1 EINPROGRESS (Operation now in progress)
+	epoll_ctl(3, EPOLL_CTL_ADD, 5, {EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP|EPOLLRDHUP, {u32=5, u64=5}}) = 0
+	accept4(4, 0, NULL, SOCK_NONBLOCK)      = 6
+	getsockopt(5, SOL_SOCKET, SO_ERROR, [0], [4]) = 0
+	epoll_ctl(3, EPOLL_CTL_ADD, 6, {EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP|EPOLLRDHUP, {u32=6, u64=6}}) = 0
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}}, 8, 0) = 2
+
+On the wire, this is just a typical 3-way handshake:
+
+    09:57:08.858310 IP (tos 0x0, ttl 64, id 45056, offset 0, flags [DF], proto TCP (6), length 60)
+	    localhost.40046 > localhost.6789: Flags [S], cksum 0xfe30 (incorrect -> 0xe72e), seq 2887281693, win 43690, options [mss 65495,sackOK,TS val 314170397 ecr 0,nop,wscale 7], length 0
+	09:57:08.858333 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], proto TCP (6), length 60)
+	    localhost.6789 > localhost.40046: Flags [S.], cksum 0xfe30 (incorrect -> 0xff88), seq 1279503482, ack 2887281694, win 43690, options [mss 65495,sackOK,TS val 314170397 ecr 314170397,nop,wscale 7], length 0
+	09:57:08.858355 IP (tos 0x0, ttl 64, id 45057, offset 0, flags [DF], proto TCP (6), length 52)
+	    localhost.40046 > localhost.6789: Flags [.], cksum 0xfe28 (incorrect -> 0xd1cd), seq 1, ack 1, win 342, options [nop,nop,TS val 314170397 ecr 314170397], length 0
+
+We now have two file descriptors, 5 and 6, that are opposite ends of the same TCP connection. They’re both in the epoll set of epoll file descriptor 3. They’re both signaling writability (EPOLLOUT), and nothing else. All is as expected.
+
+### shutdown(SHUT\_RD)
+
+Now let’s call shutdown(5, SHUT\_RD).
+
+	shutdown(5, SHUT_RD)                    = 0
+	epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}}, 8, 0) = 2
+	read(5, "", 1)                          = 0
+	epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}}, 8, 0) = 2
+	write(6, "a", 1)                        = 1
+	read(5, "a", 1)                         = 1
+	epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}}, 8, 0) = 2
+	close(5)                                = 0
+	epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6, u64=6}}}, 8, 0) = 1
+
+<!-- -->
+
+	09:57:08.858416 IP (tos 0x0, ttl 64, id 28774, offset 0, flags [DF], proto TCP (6), length 53)
+	    localhost.6789 > localhost.40046: Flags [P.], cksum 0xfe29 (incorrect -> 0x70c4), seq 1:2, ack 1, win 342, options [nop,nop,TS val 314170397 ecr 314170397], length 1
+	09:57:08.858587 IP (tos 0x0, ttl 64, id 28775, offset 0, flags [DF], proto TCP (6), length 52)
+	    localhost.6789 > localhost.40046: Flags [F.], cksum 0xfe28 (incorrect -> 0xd1ca), seq 2, ack 2, win 342, options [nop,nop,TS val 314170397 ecr 314170397], length 0
+
+After the call, fd 5 begins signaling EPOLLIN (incoming data, in this case EOF) and EPOLLRDHUP (peer shut down or stopped writing). read(5) returns 0, signaling EOF. All of those make sense.
+
+However, this doesn’t do anything on the wire. That means that the other side of the socket has no way to know that anything has changed. epoll doesn’t show any change on fd 6, and write(6) works fine. In fact, despite having previously signaled EOF, read(5) still returns data.
+
+Side note: notice that close(5) causes automatic removal of that socket from the epoll set. This is handy, but see dup() below.
+
+### shutdown(SHUT\_WR)
+
+Let’s rewind and test with SHUT\_WR (write).
+
+	shutdown(5, SHUT_WR)                    = 0
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6, u64=6}}}, 8, 0) = 2
+	write(5, "a", 1)                        = -1 EPIPE (Broken pipe)
+	--- SIGPIPE {si_signo=SIGPIPE, si_code=SI_USER, si_pid=23054, si_uid=1000} ---
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6, u64=6}}}, 8, 0) = 2
+	read(6, "", 1)                          = 0
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6, u64=6}}}, 8, 0) = 2
+	write(6, "a", 1)                        = 1
+	epoll_wait(3, {{EPOLLIN|EPOLLOUT, {u32=5, u64=5}}, {EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6, u64=6}}}, 8, 0) = 2
+	read(5, "a", 1)                         = 1
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6, u64=6}}}, 8, 0) = 2
+	close(5)                                = 0
+	epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6, u64=6}}}, 8, 0) = 1
+	write(6, "a", 1)                        = 1
+	epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP|EPOLLRDHUP, {u32=6, u64=6}}}, 8, 0) = 1
+
+<!-- -->
+
+	10:11:46.386243 IP (tos 0x0, ttl 64, id 17470, offset 0, flags [DF], proto TCP (6), length 52)
+	    localhost.40074 > localhost.6789: Flags [F.], cksum 0xfe28 (incorrect -> 0xc800), seq 1, ack 1, win 342, options [nop,nop,TS val 314389779 ecr 314389779], length 0
+	10:11:46.386339 IP (tos 0x0, ttl 64, id 9325, offset 0, flags [DF], proto TCP (6), length 52)
+	    localhost.6789 > localhost.40074: Flags [F.], cksum 0xfe28 (incorrect -> 0xc7fe), seq 2, ack 2, win 342, options [nop,nop,TS val 314389779 ecr 314389779], length 0
+	10:11:46.386346 IP (tos 0x0, ttl 64, id 1209, offset 0, flags [DF], proto TCP (6), length 52)
+	    localhost.40074 > localhost.6789: Flags [.], cksum 0xc7fe (correct), seq 2, ack 3, win 342, options [nop,nop,TS val 314389779 ecr 314389779], length 0
+
+After shutdown(5, SHUT\_WR), fd 5 returns EPIPE and generates SIGPIPE if you write to it. The shutdown message traverses the wire this time (via the FIN flag), and fd 6 on the other end of the connection signals EPOLLIN and EPOLLRDHUP. Data can still traverse fd 6 -> 5 normally.
+
+The only oddity here is that calling close(5) doesn’t change any of the epoll status flags for fd 6. Once you attempt to write to fd 6, however, every flag on the planet starts firing, including EPOLLERR and EPOLLHUP.
+
+### dup()
+
+Rewinding to our setup state again, let’s look at dup().
+
+	dup(5)                                  = 7
+	epoll_ctl(3, EPOLL_CTL_ADD, 7, {EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP|EPOLLRDHUP, {u32=7, u64=7}}) = 0
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}, {EPOLLOUT, {u32=7, u64=7}}}, 8, 0) = 3
+	write(6, "a", 1)                        = 1
+	epoll_wait(3, {{EPOLLIN|EPOLLOUT, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}, {EPOLLIN|EPOLLOUT, {u32=7, u64=7}}}, 8, 0) = 3
+	read(5, "a", 1)                         = 1
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}, {EPOLLOUT, {u32=7, u64=7}}}, 8, 0) = 3
+	close(5)                                = 0
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}, {EPOLLOUT, {u32=7, u64=7}}}, 8, 0) = 3
+	epoll_ctl(3, EPOLL_CTL_DEL, 5, NULL)    = -1 EBADF (Bad file descriptor)
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}, {EPOLLOUT, {u32=7, u64=7}}}, 8, 0) = 3
+	close(7)                                = 0
+	epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6, u64=6}}}, 8, 0) = 1
+
+<!-- -->
+
+	10:22:06.879993 IP (tos 0x0, ttl 64, id 61029, offset 0, flags [DF], proto TCP (6), length 53)
+	    localhost.6789 > localhost.40082: Flags [P.], cksum 0xfe29 (incorrect -> 0x51a0), seq 1:2, ack 1, win 342, options [nop,nop,TS val 314544902 ecr 314544902], length 1
+
+Nothing interesting on the wire this time; it’s all internal state.
+
+dup(5) gives us the new fd 7. We add it to the set, and all looks normal. We write(6), and both 5 and 7 begin signaling EPOLLIN. read(5) also clears EPOLLIN from 7. Calling close(5) doesn’t cause 6 to signal EPOLLIN or EPOLLRDHUP, since all fd copies have to close to trigger EOF on the socket. All sane.
+
+Here’s crazy town, though. close(5) doesn’t remove it from the epoll set. epoll is waiting for the underlying socket to close, and fd 7’s existence is keeping it alive. Trying to remove fd 5 from the epoll set also fails. The only way to get rid of it seems to be to close(7), which removes both from the set and causes fd 6 to signal EPOLLIN and EPOLLRDHUP.
+
+### shutdown(SHUT\_RD) + dup()
+
+	dup(5)                                  = 7
+	epoll_ctl(3, EPOLL_CTL_ADD, 7, {EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP|EPOLLRDHUP, {u32=7, u64=7}}) = 0
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}, {EPOLLOUT, {u32=7, u64=7}}}, 8, 0) = 3
+	shutdown(7, SHUT_RD)                    = 0
+	epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}, {EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=7, u64=7}}}, 8, 0) = 3
+
+Nothing extra traverses the wire.
+
+The takeaway here is that shutdown() operates on the underlying socket endpoint, not the file descriptor. Calling shutdown(7, SHUT\_RD) causes both fd 5 and 7 to signal EPOLLIN and EPOLLRDHUP.
+
+### shutdown(SHUT\_WR) + dup()
+
+	dup(5)                                  = 7
+	epoll_ctl(3, EPOLL_CTL_ADD, 7, {EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP|EPOLLRDHUP, {u32=7, u64=7}}) = 0
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}, {EPOLLOUT, {u32=7, u64=7}}}, 8, 0) = 3
+	shutdown(7, SHUT_WR)                    = 0
+	epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6, u64=6}}, {EPOLLOUT, {u32=7, u64=7}}}, 8, 0) = 3
+
+<!-- -->
+
+	10:33:23.293950 IP (tos 0x0, ttl 64, id 51352, offset 0, flags [DF], proto TCP (6), length 52)
+	    localhost.40094 > localhost.6789: Flags [F.], cksum 0xfe28 (incorrect -> 0xc4ce), seq 1, ack 1, win 342, options [nop,nop,TS val 314714006 ecr 314714006], length 0
+
+As expected, shutdown(7, SHUT\_WR) causes fd 6 to signal EPOLLIN and EPOLLRDHUP.
+
+### Conclusions
+
+* If you’re using dup() and epoll, you need to call epoll\_ctl(EPOLL\_CTL\_DEL) before calling close(). It’s hard to imagine getting sane behavior any other way. If you never use dup(), you can just call close().
+* If you’re using dup() and epoll and want to signal all fds on a socket to close, you can call shutdown(SHUT\_RD) before calling close(), causing EPOLLRDHUP to signal for other fds attached to the same socket.
+* Remember that read() == 0 and EPOLLRDHUP mean that you can’t read, but not that you can’t write. EPIPE, EPOLLERR, and EPOLLHUP mean that you can’t write.
+* shutdown(SHUT\_WR) is a useful way to signal EOF on a receive-only socket and to protect yourself from accidental socket misuse (including two read-only sockets connected to each other, which would otherwise wait forever). It will require the other end of your connection to be doing everything right; it’s likely that many systems will treat EOF as a signal that they’re unable to write.
+* shutdown(SHUT\_RD) is nice window dressing, but the only mistake it’s going to save you from is misuse of EPOLLIN/EPOLLRDHUP. The other side can still write() and you can still read().
+* An alternative to shutdown(SHUT\_RD) is to request notification of EPOLLIN on write-only sockets. This allows you to detect two write-only sockets connected to each other.
+
+<!--# include file="include/bottom.html" -->
