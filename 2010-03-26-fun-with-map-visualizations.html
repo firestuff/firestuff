@@ -1,0 +1,20 @@
+<!--# set var="title" value="Fun with map visualizations" -->
+<!--# set var="date" value="March 26, 2010" -->
+
+<!--# include file="include/top.html" -->
+
+<p>I've been playing with Google's <a href="http://code.google.com/apis/charttools/">Chart Tools</a> quite a bit lately.</p>
+
+<p>I did some internal stuff at work (that unfortunately I can't show here) to visualize problems where you have lots of points, all connected by lines that you know the ideal length of, but where those lengths don't lay out properly in 2 dimensions, and figuring out where to put the points is hard anyway.</p>
+
+<p>The most elegant solution seems to be a <a href="http://en.wikipedia.org/wiki/Force-based_algorithms">force-directed graph</a>: pretend the lines are springs, randomize the initial point positions, and simulate physics iteratively. It's slow, and the algorithm is easy to screw up (don't forget friction, or they just orbit each other), but the results are impressive: consistent layouts that are rotation-agnostic each time you run the algorithm. I ended up rendering the results using the static <a href="http://code.google.com/apis/chart/docs/gallery/scatter_charts.html">scatter chart</a>. Sadly, the URL syntax is arcane, and the error feedback is nonexistent.</p>
+
+<p>Today, I got to build a visualization that <a href="http://www.google.com/appserve/fiberrfi">went public</a>:</p>
+
+<p><img src="data:image/png;base64,<!--# include file="images/fiberrfi-map.png.base64" -->" alt=""></p>
+
+<p>We had lots of data from the fiber-to-the-home request-for-information site, and needed a way to visualize it. This is a <a href="http://code.google.com/apis/visualization/documentation/gallery/geomap.html">geo map</a> that uses markers. Unfortunately, the API limits you to 400 points, which wasn't enough, so I (at nmlorg's suggestion) screenshotted the map with 400 points at a time and stitched the results; hacky, but functional. We couldn't have used the direct rendering anyway, as it does one AJAX call to Google Maps to look up each point (we were passing in ZIP codes), so it takes ~10 minutes to render.</p>
+
+<p>We considered <a href="http://code.google.com/apis/maps/documentation/staticmaps/">static maps</a> (custom icons would've been cool), but the URL length limit makes the effective point limit less than 400, and there's only so much stitching I'll put up with.</p>
+
+<!--# include file="include/bottom.html" -->
