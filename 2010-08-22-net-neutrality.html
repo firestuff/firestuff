@@ -1,0 +1,61 @@
+<!--# set var="title" value="Net Neutrality?" -->
+<!--# set var="date" value="August 22, 2010" -->
+
+<!--# include file="include/top.html" -->
+
+<p>A few weeks ago, Google announced a <a href="http://googlepublicpolicy.blogspot.com/2010/08/joint-policy-proposal-for-open-internet.html">starting point framework for discussion of net neutrality</a>. It's been attacked from all sides for lots of reasons. I was having trouble forming an opinion in any direction (other than some knee-jerk Google defense), until I read <a href="http://www.reddit.com/r/AskReddit/comments/d2kwy/reddit_what_the_heck_is_net_neutrality/">this</a>. It made me realize that the problem with the Google proposal isn't specific stances, but lack of technical detail; it makes it hard for technical people to have a rational discussion about this. Even the reddit post doesn't spell this out wonderfully.</p>
+
+<p>Instead, how about some simple (technical) questions? My personal opinions are in []. Note "may" instead of "can"; all of these things are technically possible today (which is how we got here), so we're talking about industry self-regulation or government regulation.</p>
+
+<ol>
+<li><p><strong>May ISPs prioritize some protocols over others?</strong> [yes]<br>
+e.g. <em>may an ISP give HTTP traffic priority over bittorrent?</em></p>
+
+<ol>
+<li><strong>Must users be able to change these settings, including disabling prioritization?</strong> [yes]<br>
+This may be a tricky network architecture problem if the ISP has choke points that aren't the DSL or cable line. If the ISP oversubscribes their own upstream links, they have to propagate the user preference through the whole network.
+<ol>
+<li><strong>Is it opt-in or opt-out?</strong> [opt-out; this is probably useful for most users]</li>
+</ol></li>
+<li><strong>May prioritization consider sub-protocols?</strong> [yes]<br>
+e.g. <em>may an ISP give text/html HTTP responses priority over video/webm responses?</em></li>
+</ol></li>
+<li><p><strong>May ISPs prioritize some destinations over others?</strong> [no]<br>
+e.g. <em>may an ISP give google.com traffic priority over bing.com traffic?</em><br>
+User choice probably doesn't make sense here, as it's hard to argue that this type of prioritization benefits users.</p>
+
+<ol>
+<li><strong>May ISPs accept money from destination sites for prioritization?</strong> [no]<br>
+e.g. <em>may Verizon take $10 million/year from Google to prioritize traffic to google.com?</em></li>
+</ol></li>
+<li><p><strong>May ISPs prioritize some users over others?</strong> [yes]<br>
+e.g. <em>may an ISP provide more expensive service options that prioritize traffic?</em></p>
+
+<ol>
+<li><strong>May ISPs prioritize users punitively?</strong> [no]<br>
+e.g. <em>may an ISP move a high-traffic user to a lower priority?</em></li>
+</ol></li>
+<li><p><strong>May ISPs block some protocols?</strong> [no]<br>
+e.g. <em>may an ISP block bittorrent entirely?</em><br>
+This typically comes up as an anti-piracy solution. [Protocols themselves are never inherently anti-copyright (even if 95% of their use is for software/media piracy); the courts get this one wrong frighteningly often.]</p></li>
+<li><p><strong>May ISPs block some destinations?</strong> [no]<br>
+e.g. <em>may an ISP block porn sites?</em><br>
+This typically comes up as a protect-the-children solution. [Filtering technology has far too many false positives, and the same technology available to ISPs is available to end users. Parents concerned about what their children are exposed to can install home solutions, which children will bypass just as easily as they bypass ISP solutions.]</p></li>
+<li><p><strong>May ISPs charge per-byte?</strong> [yes]<br>
+e.g. <em>may ISPs offer cheaper plans that charge per-megabyte, possibly after the user passes a threshold?</em><br></p>
+
+<ol>
+<li><strong>Must ISPs provide per-byte users tools to see their usage?</strong> [yes]</li>
+<li><strong>Must ISPs only use the word "unlimited" for plans which are truly unlimited?</strong> [yes]<br>
+e.g. <em>are ISPs prohibited from calling a plan with a 250GB cap "unlimited" in advertising?</em></li>
+</ol></li>
+<li><p><strong>Must ISPs disclose their answers to all of these questions?</strong> [yes]<br>
+e.g. <em>"We prioritize some destinations over others."</em></p>
+
+<ol>
+<li><strong>Must ISPs disclose details?</strong> [yes]<br>
+e.g. <em>"We prioritize google.com over bing.com."</em></li>
+</ol></li>
+</ol>
+
+<!--# include file="include/bottom.html" -->

@@ -19,6 +19,7 @@
 1. 2016-Feb-15: [Cable modem channel party](2016-02-15-cable-modem-channel-party.html)
 1. 2016-Feb-01: [How to enrage your cable modem](2016-02-01-how-to-enrage-your-cable-modem.html)
 1. 2016-Feb-01: [Hall of 2.4 GHz Shame, 2016 Edition](2016-02-01-hall-of-2-4-ghz-shame-2016-edition.html)
+1. 2010-Aug-22: [Net Neutrality?](2010-08-22-net-neutrality.html)
 1. 2010-Apr-10: [Home video re-think](2010-04-10-home-video-rethink.html)
 1. 2010-Apr-07: [(Wireless) network optimization, 2010 edition](2010-04-07-wireless-network-optimization-2010-edition.html)
 1. 2010-Apr-05: [Comcast hacking](2010-04-05-comcast-hacking.html)
