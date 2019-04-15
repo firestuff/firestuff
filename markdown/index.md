@@ -18,5 +18,6 @@
 1. 2016-Feb-15: [Streaming Netflix from Android to OS X](2016-02-15-streaming-netflix-from-android-to-os-x.html)
 1. 2016-Feb-15: [Cable modem channel party](2016-02-15-cable-modem-channel-party.html)
 1. 2016-Feb-01: [How to enrage your cable modem](2016-02-01-how-to-enrage-your-cable-modem.html)
+1. 2016-Feb-01: [Hall of 2.4 GHz Shame, 2016 Edition](2016-02-01-hall-of-2-4-ghz-shame-2016-edition.html)
 
 <!--# include file="include/bottom.html" -->
