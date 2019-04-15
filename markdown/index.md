@@ -17,5 +17,6 @@
 1. 2016-Feb-24: [Down the epoll rabbit hole](2016-02-24-down_the_epoll_rabbit_hole.html)
 1. 2016-Feb-15: [Streaming Netflix from Android to OS X](2016-02-15-streaming-netflix-from-android-to-os-x.html)
 1. 2016-Feb-15: [Cable modem channel party](2016-02-15-cable-modem-channel-party.html)
+1. 2016-Feb-01: [How to enrage your cable modem](2016-02-01-how-to-enrage-your-cable-modem.html)
 
 <!--# include file="include/bottom.html" -->
