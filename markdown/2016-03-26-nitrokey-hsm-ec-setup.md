@@ -3,7 +3,7 @@
 
 <!--# include file="include/top.html" -->
 
-Following up from my previous writeup on [creating an EC CA](https://medium.com/where-the-flamingcow-roams/elliptic-curve-certificate-authority-bbdb9c3855f7#.wv19mvxse), let’s talk about key security.
+Following up from my previous writeup on [creating an EC CA](2016-03-21-elliptic-curve-certificate-authority.html), let’s talk about key security.
 
 [Hardware security modules](https://en.wikipedia.org/wiki/Hardware_security_module) are physical devices that manage keys. Generally, the rule is that they let you use the keys for operations (e.g. signing) given correct authentication, but don’t let you extract the raw key material. This means that if you’re holding the HSM, you know that no one else is currently abusing your key (though they may have done so in the past).
 
@@ -91,6 +91,6 @@ Now, delete the file, re-initialize the device, and you’re good to go.
 
 More instructions on various Nitrokey HSM operations can be found [here](https://github.com/OpenSC/OpenSC/wiki/SmartCardHSM#init).
 
-Instructions for running a complete certificate authority (CA) with your Nitrokey are [here](https://medium.com/where-the-flamingcow-roams/ec-ca-redux-now-with-more-nitrokey-729061e1b7c9#.d7igz5dhv).
+Instructions for running a complete certificate authority (CA) with your Nitrokey are [here](2016-03-27-ec-ca-redux-now-with-more-nitrokey.html).
 
 <!--# include file="include/bottom.html" -->

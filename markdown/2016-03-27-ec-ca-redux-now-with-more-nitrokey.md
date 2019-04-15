@@ -3,7 +3,7 @@
 
 <!--# include file="include/top.html" -->
 
-This is a revisit on my doc on [how to set up an EC CA](https://medium.com/where-the-flamingcow-roams/elliptic-curve-certificate-authority-bbdb9c3855f7#.4z3bzvz6e). In this version, we’re using the [Nitrokey HSM](https://shop.nitrokey.com/shop/product/nitrokey-hsm-7) for key generation, storage, and operations. You’ll need two Nitrokey HSMs. You can get away with one, but there’s not a lot of point to splitting root and intermediate certs if you then keep them on the same device. You’ll also need a [system set up](https://medium.com/where-the-flamingcow-roams/nitrokey-hsm-ec-setup-6ed9b9e43c36#.pgal18rvh) to talk to the Nitrokey, which is a bit tricky.
+This is a revisit on my doc on [how to set up an EC CA](2016-03-21-elliptic-curve-certificate-authority.html). In this version, we’re using the [Nitrokey HSM](https://shop.nitrokey.com/shop/product/nitrokey-hsm-7) for key generation, storage, and operations. You’ll need two Nitrokey HSMs. You can get away with one, but there’s not a lot of point to splitting root and intermediate certs if you then keep them on the same device. You’ll also need a [system set up](2016-03-26-nitrokey-hsm-ec-setup.html) to talk to the Nitrokey, which is a bit tricky.
 
 If you do this right, you can set up a CA where the keys never touched computer that you’re using to host the CA; they only ever reside protected in the Nitrokey.
 

@@ -7,7 +7,7 @@
 
 <p>Turns out some winner in Piland re-used GPIO pins necessary to make serial work for Bluetooth. I guess they figured that no one used serial console?</p>
 
-<p>To fix, you’ll need a monitor &amp; keyboard. First follow the instructions <a href="https://medium.com/where-the-flamingcow-roams/raspbian-setup-notes-677a71de5b9f#.xm7jhawwi">here</a> up through “Update firmware” (rpi-update). Then edit /boot/config.txt and add the line:</p>
+<p>To fix, you’ll need a monitor &amp; keyboard. First follow the instructions <a href="2016-03-13-raspbian-setup-notes.html">here</a> up through “Update firmware” (rpi-update). Then edit /boot/config.txt and add the line:</p>
 
 <pre><code>dtoverlay=pi3-disable-bt
 </code></pre>

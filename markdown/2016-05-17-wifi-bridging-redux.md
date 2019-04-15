@@ -3,7 +3,7 @@
 
 <!--# include file="include/top.html" -->
 
-I previously wrote about building [WiFi client routers](https://medium.com/where-the-flamingcow-roams/wifi-client-router-setup-9712a5f943e4#.z3wzhlub9) instead of bridges; they get you broadcast domain isolation and a degree of conceptual simplicity (no L2 tricks). I finally ran into a requirement on a different project to build an actual bridge; here’s how I did it.
+I previously wrote about building [WiFi client routers](2016-03-13-wifi-client-router-setup.html) instead of bridges; they get you broadcast domain isolation and a degree of conceptual simplicity (no L2 tricks). I finally ran into a requirement on a different project to build an actual bridge; here’s how I did it.
 
 You can copy the hardware from the router post, or use what you’ve got; I don’t believe this is driver-specific.
 

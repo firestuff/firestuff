@@ -7,7 +7,7 @@ Got my new RPi 3s. So exciting! Connect to my [serial cable](https://www.adafrui
 
 Turns out some winner in Piland re-used GPIO pins necessary to make serial work for Bluetooth. I guess they figured that no one used serial console?
 
-To fix, you’ll need a monitor & keyboard. First follow the instructions [here](https://medium.com/where-the-flamingcow-roams/raspbian-setup-notes-677a71de5b9f#.xm7jhawwi) up through “Update firmware” (rpi-update). Then edit /boot/config.txt and add the line:
+To fix, you’ll need a monitor & keyboard. First follow the instructions [here](2016-03-13-raspbian-setup-notes.html) up through “Update firmware” (rpi-update). Then edit /boot/config.txt and add the line:
 
     dtoverlay=pi3-disable-bt
 

@@ -3,7 +3,7 @@
 
 <!--# include file="include/top.html" -->
 
-I’ve still got two devices in my home that can’t do WiFi natively, but that I don’t have a good wiring solution for (one is an RPi that has a strange device on the USB bus that panics if anything else is on the USB bus, and the other is a FireTV with [issues](https://medium.com/where-the-flamingcow-roams/hall-of-2-4-ghz-shame-2016-edition-97781b48cdb5#.1bt4sd207)). This is a great opportunity to use another Raspberry Pi as a WiFi client <-> wired connection, providing a wired drop wherever I want it.
+I’ve still got two devices in my home that can’t do WiFi natively, but that I don’t have a good wiring solution for (one is an RPi that has a strange device on the USB bus that panics if anything else is on the USB bus, and the other is a FireTV with [issues](2016-02-01-hall-of-2-4-ghz-shame-2016-edition.html)). This is a great opportunity to use another Raspberry Pi as a WiFi client <-> wired connection, providing a wired drop wherever I want it.
 
 If you search for this on the Internets, you discover a problem. While 802.11 looks like Ethernet, there’s a critical difference in this case. Most access points won’t let clients speak with anything other than their own MAC address. If you’re two or more devices (the client and the devices wired to it), you have a problem, with a few ugly solutions:
 
@@ -23,7 +23,7 @@ If you’ve got a router at the front of your network that supports static route
 
 <img src="data:image/webp;base64,<!--# include file="images/wifi-router.webp.base64" -->" alt="">
 
-[Install and configure Raspbian Lite](https://medium.com/where-the-flamingcow-roams/streaming-netflix-from-android-to-os-x-4486cbc7eb9e#.kvnxuy3c5). [Get your device connected via WiFi](https://wiki.archlinux.org/index.php/WPA_supplicant). (Side note: the ArchLinux wiki is really great).
+[Install and configure Raspbian Lite](https://dev.firestuff.org/firestuff/2016-03-13-raspbian-setup-notes.html). [Get your device connected via WiFi](https://wiki.archlinux.org/index.php/WPA_supplicant). (Side note: the ArchLinux wiki is really great).
 
 ### Assign a static IPv4 address
 
