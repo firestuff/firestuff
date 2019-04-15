@@ -19,6 +19,7 @@
 1. 2016-Feb-15: [Cable modem channel party](2016-02-15-cable-modem-channel-party.html)
 1. 2016-Feb-01: [How to enrage your cable modem](2016-02-01-how-to-enrage-your-cable-modem.html)
 1. 2016-Feb-01: [Hall of 2.4 GHz Shame, 2016 Edition](2016-02-01-hall-of-2-4-ghz-shame-2016-edition.html)
+1. 2012-Mar-09: [Google MySQL team is hiring](2012-03-09-google-mysql-team-is-hiring.html)
 1. 2011-Dec-09: [The dangers of max_connections](2011-12-09-the-dangers-of-max-connections.html)
 1. 2011-Nov-29: [Converting subselects to joins, part 2](2011-11-29-converting-subselects-to-joins-part-2.html)
 1. 2011-Nov-29: [Safe(r) data changes](2011-11-29-safer-data-changes.html)
