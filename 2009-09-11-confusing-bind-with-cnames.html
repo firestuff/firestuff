@@ -1,0 +1,19 @@
+<!--# set var="title" value="Confusing BIND with CNAMEs" -->
+<!--# set var="date" value="September 11, 2009" -->
+
+<!--# include file="include/top.html" -->
+
+<p>Given the zone:</p>
+
+<pre><code>subdomain IN NS nameserver
+nameserver IN CNAME nameserver.otherserver
+</code></pre>
+
+<p>in a BIND server that is both recursive and authoritative, requests without RD (recursion desired) return the NS record, while requests with RD return SERVFAIL. Changing it to:</p>
+
+<pre><code>subdomain IN NS nameserver.otherserver
+</code></pre>
+
+<p>fixes the problem, though both resolution trees are perfectly valid.</p>
+
+<!--# include file="include/bottom.html" -->
