@@ -19,6 +19,7 @@
 1. 2016-Feb-15: [Cable modem channel party](2016-02-15-cable-modem-channel-party.html)
 1. 2016-Feb-01: [How to enrage your cable modem](2016-02-01-how-to-enrage-your-cable-modem.html)
 1. 2016-Feb-01: [Hall of 2.4 GHz Shame, 2016 Edition](2016-02-01-hall-of-2-4-ghz-shame-2016-edition.html)
+1. 2010-Apr-05: [Comcast hacking](2010-04-05-comcast-hacking.html)
 1. 2010-Mar-26: [Fun with map visualizations](2010-03-26-fun-with-map-visualizations.html)
 1. 2010-Mar-09: [Karaoke project](2010-03-09-karaoke-project.html)
 1. 2009-Sep-11: [Confusing BIND with CNAMEs](2009-09-11-confusing-bind-with-cnames.html)
