@@ -19,6 +19,7 @@
 1. 2016-Feb-15: [Cable modem channel party](2016-02-15-cable-modem-channel-party.html)
 1. 2016-Feb-01: [How to enrage your cable modem](2016-02-01-how-to-enrage-your-cable-modem.html)
 1. 2016-Feb-01: [Hall of 2.4 GHz Shame, 2016 Edition](2016-02-01-hall-of-2-4-ghz-shame-2016-edition.html)
+1. 2011-Aug-08: [Database best practices for future scalability](2011-08-08-database-best-practices-for-future-scalability.html)
 1. 2011-Jul-12: [Converting subselects to joins](2011-07-12-converting-subselects-to-joins.html)
 1. 2011-Apr-22: [Avoid MySQL round trips](2011-04-22-avoid-mysql-round-trips.html)
 1. 2011-Apr-19: [Video sharing sucks](2011-04-19-video-sharing-sucks.html)
