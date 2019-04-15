@@ -1,0 +1,21 @@
+<!--# set var="title" value="A new generation of Google MySQL tools" -->
+<!--# set var="date" value="April 1, 2011" -->
+
+<!--# include file="include/top.html" -->
+
+<p>When I started at Google, the MySQL team had a moderate open source presence. The largest part was the Google server patches for 4.0, 5.0 and some starter work on 5.1. There was also a small set of tools: mypgrep, mstat and some others. Chip Turner, who did the tools releases, had already moved to another team, and we haven't released new tools since.</p>
+
+<p>I'm now happy to announce a new round of tool releases. We're just getting started, but here's what's available so far:</p>
+
+<ul>
+<li><a href="http://code.google.com/p/google-mysql-tools/source/browse/trunk/pylib/db.py">db.py</a>: Easily execute queries in parallel on a sharded database</li>
+<li><a href="http://code.google.com/p/google-mysql-tools/source/browse/trunk/sql.py">sql.py</a>: Interactive shell to db.py</li>
+<li><a href="http://code.google.com/p/google-mysql-tools/source/browse/trunk/permissions.py">permissions.py</a>: Manage MySQL permissions in a Python-based format</li>
+<li><a href="http://code.google.com/p/google-mysql-tools/source/browse/trunk/validate.py">validate.py</a>: Parse SQL using pyparsing and apply rules with live DB data</li>
+</ul>
+
+<p>These are the actual tools being used to run MySQL at scale inside Google, not one-time sanitized copies. You can get them at <a href="http://code.google.com/p/google-mysql-tools/">http://code.google.com/p/google-mysql-tools/</a>. The old tools and patches are still available in <a href="http://code.google.com/p/google-mysql-tools/source/browse/#svn%2Ftrunk%2Fold">old/</a>.</p>
+
+<p>Thanks to the whole team for their work on these tools and especially to Razvan Musaloiu-E. for handling release code reviews. Watch/subscribe to this blog or subscribe to <a href="http://groups.google.com/group/google-mysql-tools">the google-mysql-tools mailing list</a> for future updates. If you'll be at the <a href="http://en.oreilly.com/mysql2011/">2011 MySQL conference</a>, stop by my talk with <a href="http://en.oreilly.com/mysql2011/public/schedule/speaker/8129">Eric Rollins</a> on <a href="http://en.oreilly.com/mysql2011/public/schedule/detail/17137">automatic failover</a> and <a href="http://en.oreilly.com/mysql2011/public/schedule/speaker/57828">Mikey Dickerson</a>'s on <a href="http://en.oreilly.com/mysql2011/public/schedule/detail/17138">detecting data drift</a>.</p>
+
+<!--# include file="include/bottom.html" -->
