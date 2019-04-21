@@ -1,0 +1,10 @@
+default 0
+timeout 5
+color cyan/blue white/blue
+
+title           Debian Installer
+root            (hd0,0)
+kernel          /vmlinuz ramdisk_size=10000 root=/dev/rd/0 init=/linuxrc devfs=mount,dall rw
+initrd          /initrd.gz
+savedefault
+boot

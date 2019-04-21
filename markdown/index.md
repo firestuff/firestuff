@@ -39,6 +39,7 @@
 1. 2009-Sep-11: [Confusing BIND with CNAMEs](2009-09-11-confusing-bind-with-cnames.html)
 1. 2009-Feb-19: [The odd case of my mugging](2019-02-19-the-odd-case-of-my-mugging.html)
 1. 2009-Feb-03: [5-packet TCP connection?](2009-02-03-5-packet-tcp-connection.html)
+1. 2006-Feb-06: [Installing Debian from a USB stick](2006-02-06-installing-debian-from-a-usb-stick.html)
 1. 2006-Feb-02: [Rebooting Linux when it doesn’t feel like it](2006-02-02-rebooting-linux-when-it-doesnt-feel-like-it.html)
 1. 2006-Jan-25: [New MySQL toys](2006-01-25-new-mysql-toys.html)
 1. 2006-Jan-24: [Finally, sane MySQL clustering](2006-01-24-finally-sane-mysql-clustering.html)
