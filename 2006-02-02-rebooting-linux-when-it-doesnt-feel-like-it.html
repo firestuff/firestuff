@@ -1,0 +1,32 @@
+<!--# set var="title" value="Rebooting Linux when it doesn’t feel like it" -->
+<!--# set var="date" value="February 2, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>Linux seems to have a unique knack to just not want to shut down sometimes. This gets caused by everything from I/O failures stopping you loading the “shutdown” application, to I/O failures putting processes in “D” state, to I/O failures stopping you unmounting filesystems. So mainly it’s I/O failures, I guess :)</p>
+
+<p>If your machine won’t shut down, try these in order:</p>
+
+<pre><code>shutdown -h now
+halt
+telinit 0
+halt -f
+echo o &gt; /proc/sysrq-trigger
+</code></pre>
+
+<p>For reboots, try:</p>
+
+<pre><code>shutdown -r now
+reboot
+telinit 6
+reboot -f
+echo b &gt; /proc/sysrq-trigger
+</code></pre>
+
+<p>The first three commands in each block have the possibility to leave you halfway through a shutdown if there’s something that prevents the normal shutdown scripts from working properly. The last two commands will take the system down harshly, requiring fscks on reboot (and possibly manual fscks, depending on your distribution) and possibly corrupting data.</p>
+
+<p>While I’ve seen kernel bugs cause problems like this, the likely cause is disk or controller hardware failure. If your disk blew up, rebooting isn’t going to do you alot of good.</p>
+
+<p>/derf-question</p>
+
+<!--# include file="include/bottom.html" -->
