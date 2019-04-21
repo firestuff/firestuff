@@ -1,0 +1,20 @@
+<!--# set var="title" value="Why isn’t mod_auth_pam working with NIS?" -->
+<!--# set var="date" value="February 26, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>If you’re trying to authenticate against NIS from Apache using mod_auth_pam, you have a problem. All (sane) Apache configurations run as a non-privileged user. All (sane) NIS servers deny requests to shadow.byname originating from ports &lt; 1024. If you check your NIS server logs, you’ll find request authentication errors.</p>
+
+<p>If the server you’re running Apache on has no untrusted user processes (no shells, no Apache CGI uploading, etc.), you can disable port security for just that host on your NIS server. This isn’t much of a security risk; you better be within the same network if you were relying on port security anyway, so host-based security is just as good (it still sucks). Just before the uncommented lines in your /etc/ypserv.conf on your NIS master, add:</p>
+
+<pre><code>&lt;client IP address&gt;:*:shadow.byname:none
+</code></pre>
+
+<p>Then restart ypserv et all. In Debian:</p>
+
+<pre><code>/etc/init.d/nis restart
+</code></pre>
+
+<p>If your client machine does have untrusted users, there isn’t a nice solution, as far as I know.</p>
+
+<!--# include file="include/bottom.html" -->
