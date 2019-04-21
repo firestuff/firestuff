@@ -1,0 +1,22 @@
+<!--# set var="title" value="sqlsearch 1.1.0" -->
+<!--# set var="date" value="July 23, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>Get it <a href="files/sqlsearch-1.1.0.tar.bz2">here</a>.</p>
+
+<p>Changes:</p>
+
+<ul>
+<li>Now indexing misspelled word versions for fast lookup</li>
+<li>Indexed search for partial words</li>
+<li>Add “:” to break characters</li>
+<li>Check minimum_length and stopword list when adding to index, to keep it smaller</li>
+<li>Add clear_data() procedure</li>
+<li>Increase points given to link target when both source and target are in the search results</li>
+<li>Give points for query keywords making up a high percentage of content (”foo bar zig” wins over “foo bar zig zag” in a search for “foo bar”)</li>
+<li>Give points for keywords earlier in the query (”zig” wins over “zag” in a search for “zig zag”)</li>
+<li>Add unit tests</li>
+</ul>
+
+<!--# include file="include/bottom.html" -->
