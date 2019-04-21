@@ -15,7 +15,9 @@ for FILE in $BASEDIR/*.md; do
 	echo "$BASENAME -> $OUTNAME"
 	TEMP=$(tempfile --dir=$BASEDIR --mode=0644 --suffix=.tmp)
 	markdown $FILE > $TEMP
-	diff -ud --color=always $OUTPATH $TEMP || true
+	if [[ -e $OUTPATH ]]; then
+		diff -ud --color=always $OUTPATH $TEMP || true
+	fi
 	mv $TEMP $OUTPATH
 done
 
