@@ -1,0 +1,45 @@
+<p>htmhtmll<!--# set var="title" value="SCTP Part #1" -->
+<!--# set var="date" value="February 26, 2006" --></p>
+
+<!--# include file="include/top.html" -->
+
+<p>I’ve been doing some work with SCTP lately. I’m working through some of the intricacies of the protocol and the brain damage of the APIs (there are two of them, and they both suck). As I write my own API, I thought I’d post a few things here showing, from examples, the nifty stuff that the protocol does. Here’s the first, dealing with message length preservation:</p>
+
+<pre><code>MSG_EOR = 128
+</code></pre>
+
+<p>IPV6/TCP:</p>
+
+<pre><code>send("ABCDEFGH", 8) = 8
+send("01234567", 8) = 8
+recv(16, MSG_DONTWAIT) = 16
+recv(16, MSG_DONTWAIT) = -1
+========
+send("ABCDEFGH", 8) = 8
+send("01234567", 8) = 8
+recvmsg(5, MSG_DONTWAIT) = 5
+-----&gt; msg_flags = 0
+recvmsg(11, MSG_DONTWAIT) = 11
+-----&gt; msg_flags = 0
+recvmsg(11, MSG_DONTWAIT) = -1
+-----&gt; msg_flags = 0
+</code></pre>
+
+<p>IPV6/SCTP:</p>
+
+<pre><code>send("ABCDEFGH", 8) = 8
+send("01234567", 8) = 8
+recv(16, MSG_DONTWAIT) = 8
+recv(16, MSG_DONTWAIT) = 8
+========
+send("ABCDEFGH", 8) = 8
+send("01234567", 8) = 8
+recvmsg(5, MSG_DONTWAIT) = 5
+-----&gt; msg_flags = 0
+recvmsg(11, MSG_DONTWAIT) = 3
+-----&gt; msg_flags = 128
+recvmsg(11, MSG_DONTWAIT) = 8
+-----&gt; msg_flags = 128
+</code></pre>
+
+<!--# include file="include/bottom.html" -->

@@ -37,6 +37,7 @@
 1. 2010-Mar-26: [Fun with map visualizations](2010-03-26-fun-with-map-visualizations.html)
 1. 2010-Mar-09: [Karaoke project](2010-03-09-karaoke-project.html)
 1. 2009-Sep-11: [Confusing BIND with CNAMEs](2009-09-11-confusing-bind-with-cnames.html)
+1. 2009-Feb-26: [SCTP Part #1](2006-02-26-sctp-part-1.html)
 1. 2009-Feb-19: [The odd case of my mugging](2019-02-19-the-odd-case-of-my-mugging.html)
 1. 2009-Feb-03: [5-packet TCP connection?](2009-02-03-5-packet-tcp-connection.html)
 1. 2006-Feb-13: [Is sleep(3) effected by time changes?](2006-02-13-is-sleep-effected-by-time-changes.html)
