@@ -39,6 +39,7 @@
 1. 2009-Sep-11: [Confusing BIND with CNAMEs](2009-09-11-confusing-bind-with-cnames.html)
 1. 2009-Feb-19: [The odd case of my mugging](2019-02-19-the-odd-case-of-my-mugging.html)
 1. 2009-Feb-03: [5-packet TCP connection?](2009-02-03-5-packet-tcp-connection.html)
+1. 2006-Feb-09: [PHP/PERL/Ruby exploit](2006-02-09-php-perl-ruby-exploit.html)
 1. 2006-Feb-07: [Why is my SSH X Window forwarding broken?](2006-02-07-why-is-my-ssh-x-window-forwarding-broken.html)
 1. 2006-Feb-06: [Installing Debian from a USB stick](2006-02-06-installing-debian-from-a-usb-stick.html)
 1. 2006-Feb-02: [Rebooting Linux when it doesn’t feel like it](2006-02-02-rebooting-linux-when-it-doesnt-feel-like-it.html)
