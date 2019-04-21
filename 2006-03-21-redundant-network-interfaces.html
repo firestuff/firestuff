@@ -1,0 +1,141 @@
+<!--# set var="title" value="Redundant Network Interfaces" -->
+<!--# set var="date" value="March 21, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>I’ve been doing alot of work on methods for using multiple network interfaces on servers as redundant connections to the same network. There are a ton of methods for doing this, and several are actually useful, depending on your network configuration. Choose your own adventure:</p>
+
+<ol>
+<li>Do you have control over your managed switches?<br>
+Yes? <em>Continue</em>. No? Step <strong>#5</strong>.</li>
+<li>Are the interfaces connected to different switches?<br>
+Yes? <em>Continue</em>. No? Step <strong>#4</strong>.</li>
+<li>Do you want your server to take over bridging as a last resort?<br>
+Yes? <strong>STP</strong>. No? <strong>bonding:active-backup</strong>.</li>
+<li>Do you want your interfaces to share bandwidth when both are up?<br>
+Yes? <strong>bonding:802.3ad</strong>. No? <strong>bonding:active-backup</strong>.</li>
+<li>Do you want your interfaces to share bandwidth when both are up?<br>
+Yes? <strong>bonding:balance-alb</strong>. No? <strong>bonding:active-backup</strong>.</li>
+</ol>
+
+<h3>STP</h3>
+
+<p>This bonding method actually uses Linux’s support for interface bridging. If a bridge is set up between two interfaces connected to the same network and spanning tree protocol is activated, one interface will be put into blocking state and won’t pass traffic. This doesn’t aggregate bandwidth between interfaces when both are up, but it has the interesting effect of allowing the server to bridge traffic between the switches if there are no other available connections. Special configuration at the switches is required to prevent it from being used as a link under normal circumstances.</p>
+
+<p>First, you’ll need the brctl program. In Debian, run:</p>
+
+<pre><code>apt-get install bridge-utils
+</code></pre>
+
+<p>Then shut your interfaces down. Edit /etc/network/interfaces and disable the eth* interfaces. Add a br0 interface with standard syntax and the added lines:</p>
+
+<pre><code>bridge_ports eth0 eth1
+bridge_stp on
+</code></pre>
+
+<p>You’ll need to teach one switch on your network to really want to be the STP root bridge. This will prevent the bridge in Linux from becoming root in normal circumstances. In Cisco IOS:</p>
+
+<pre><code>configure terminal
+spanning-tree vlan 1 priority 0
+end
+</code></pre>
+
+<p>On each switch port connected to your server, you’ll also need to increase the cost so the path is less preferred:</p>
+
+<pre><code>configure terminal
+interface FastEthernet0/23
+spanning-tree cost 100
+end
+</code></pre>
+
+<p>Then, run on your server:</p>
+
+<pre><code>ifup br0
+</code></pre>
+
+<p>You can then view the status of the bridge on the server with:</p>
+
+<pre><code>brctl show
+brctl showstp br0
+</code></pre>
+
+<p>And on the IOS switches:</p>
+
+<pre><code>show spanning tree
+</code></pre>
+
+<p>One side of one interface should be blocking.</p>
+
+<h3>bonding</h3>
+
+<p>For any of the bonding methods, you’ll need the ifenslave program. In Debian:</p>
+
+<pre><code>apt-get install ifenslave-2.6
+</code></pre>
+
+<p>You’ll also need at least one IP address on your network that can be monitored to see if links are up. Using more than one is advisable, in case one goes down. We’ll use 10.0.0.2 and 10.0.0.3 as examples here.</p>
+
+<p>After probing the module with the appropriate mode option in each case, you’ll need to disable your eth* interfaces in /etc/network/interfaces and add a bond0 interface. In Debian Etch, add the option:</p>
+
+<pre><code>slaves eth0 eth1
+</code></pre>
+
+<p>In Sarge, you have to add:</p>
+
+<pre><code>up ifenslave bond0 eth0 eth1
+down ifenslave -d bond0 eth0 eth1
+</code></pre>
+
+<p>Then run:</p>
+
+<pre><code>ifup bond0
+</code></pre>
+
+<h3>bonding:active-backup</h3>
+
+<p>This bonding mode keeps one interface completely blocked (including not sending ARP replies out it), using it strictly as a backup.</p>
+
+<p>First:</p>
+
+<pre><code>modprobe bonding mode=active-backup arp_interval=500 arp_ip_target=10.0.0.2,10.0.0.3
+</code></pre>
+
+<p>Follow the general bonding instructions above, and you’re all set!</p>
+
+<h3>bonding:802.3ad</h3>
+
+<p>This bonding mode uses the standardized IEEE 802.3ad bonding method, with a protocol (LACP) for both sides to agree on bonding information. All links must be the same speed and duplex. The balancing method between links is determined by each end; a single connection will only go over one link, and sometimes traffic with a single (ethernet-level) peer will use a single link as well.</p>
+
+<p>First:</p>
+
+<pre><code>modprobe bonding mode=802.3ad miimon=100
+</code></pre>
+
+<p>You’ll need to set up the interfaces on the switch side too:</p>
+
+<pre><code>configure terminal
+interface FastEthernet0/1
+channel-protocol lacp
+channel-group 1 mode active
+end
+</code></pre>
+
+<p>After you’ve done this for all the interfaces:</p>
+
+<pre><code>show etherchannel port-channel
+</code></pre>
+
+<p>Then follow the general bonding instructions.</p>
+
+<h3>bonding:balance-alb</h3>
+
+<p>This bonding mode balances outgoing traffic accoridng to interface speed and usage. It intercepts and rewrites outgoing ARP replies to make them come from different physical interfaces, tricking the network fabric into balancing incoming traffic as well.</p>
+
+<p>First:</p>
+
+<pre><code>modprobe bonding mode=balance-alb arp_interval=500 arp_ip_target=10.0.0.2,10.0.0.3
+</code></pre>
+
+<p>Follow the general bonding instructions above, and you’re all set!</p>
+
+<!--# include file="include/bottom.html" -->
