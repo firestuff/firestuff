@@ -1,0 +1,18 @@
+--- VncCanvas.java	2006-06-13 14:38:17.000000000 -0400
++++ VncCanvas.java.new	2006-06-13 14:38:02.000000000 -0400
+@@ -75,6 +75,15 @@
+     viewer = v;
+     rfb = viewer.rfb;
+ 
++    try {
++	    Class[] paramClasses = new Class[] { Boolean.TYPE };
++	    java.lang.reflect.Method method =
++		    this.getClass().getMethod("setFocusTraversalKeysEnabled", 
++				    paramClasses);
++	    Object[] parameters = new Object[] { new Boolean(false) };
++	    method.invoke(this, parameters);
++    } catch (Exception e) { }
++
+     tightInflaters = new Inflater[4];
+ 
+     cm8 = new DirectColorModel(8, 7, (7 << 3), (3 << 6));
