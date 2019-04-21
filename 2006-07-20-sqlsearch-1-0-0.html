@@ -1,0 +1,23 @@
+<!--# set var="title" value="sqlsearch 1.0.0" -->
+<!--# set var="date" value="July 20, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>After getting tired of waiting for the MySQL folks to <a href="http://bugs.mysql.com/bug.php?id=14521">add features</a> to FULLTEXT and to <a href="http://bugs.mysql.com/bug.php?id=13979">make it work on InnoDB</a>, I decided to do it myself. I’ve just finished <a href="files/sqlsearch-1.0.0.tar.bz2">sqlsearch 1.0.0</a>. Features:</p>
+
+<ul>
+<li>ENGINE-independent (requires triggers)</li>
+<li>Uses fast, full-word indexed searching</li>
+<li>Multi-table and multi-column indexes supported</li>
+<li>Supports “quoted strings” and +/- logical operators in search queries</li>
+<li>Gives search query feedback, including why some terms were ignored</li>
+<li>Provides typo and phonetic suggestions for words which don’t appear in the index</li>
+<li>Supports weighting of “sources” (tables or fields) and “ids” (rows)</li>
+<li>Supports link information between objects to provide additional search context</li>
+<li>Licensed under the GPL</li>
+<li>Comes with a howto document to help integrating it into your codebase</li>
+</ul>
+
+<p>If you use it and have any brilliant ideas on improving the search algorithm or for additional features, please let me know.</p>
+
+<!--# include file="include/bottom.html" -->
