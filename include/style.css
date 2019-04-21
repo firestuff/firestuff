@@ -1,5 +1,5 @@
 body {
-	font-family: Monospace, Courier;
+	font-family: monospace, Courier;
 	font-size: 16px;
 
 	max-width: 800px;
@@ -93,7 +93,7 @@ code {
 	display: block;
 	white-space: pre;
 
-	font-family: Monospace, Courier;
+	font-family: monospace, Courier;
 	font-size: 16px;
 
 	background-color: #e8e8e8;
