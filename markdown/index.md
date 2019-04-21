@@ -39,5 +39,6 @@
 1. 2009-Sep-11: [Confusing BIND with CNAMEs](2009-09-11-confusing-bind-with-cnames.html)
 1. 2009-Feb-19: [The odd case of my mugging](2019-02-19-the-odd-case-of-my-mugging.html)
 1. 2009-Feb-03: [5-packet TCP connection?](2009-02-03-5-packet-tcp-connection.html)
+1. 2006-Jan-22: [Flashing without Microsoft or floppy drives](2006-01-22-flashing-without-microsoft-or-floppy-drives.html)
 
 <!--# include file="include/bottom.html" -->

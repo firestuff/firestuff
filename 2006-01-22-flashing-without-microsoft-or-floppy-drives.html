@@ -1,0 +1,28 @@
+<!--# set var="title" value="Flashing without Microsoft or floppy drives" -->
+<!--# set var="date" value="January 22, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>Ran into an issue where we had to flash upgrade some firmware in a server. As usual, firmware downloads came as MS-DOS programs, and told you to put them on a bootable DOS floppy disk and boot from it. This is becoming a real pain in the ass — who actually uses that Microsoft crap anymore? :) Also, what server has a floppy drive?</p>
+
+<p>So, we improvise. Grab this <a href="files/boot.img">FreeDOS boot disk</a>. Mount in Linux:</p>
+
+<pre><code>sudo mount -o loop boot.img /mnt
+</code></pre>
+
+<p>Copy whatever files were provided by the vendor (hint: unzip handles most Windows self-extracting .exe’s) into /mnt.</p>
+
+<pre><code>sudo umount /mnt
+</code></pre>
+
+<p>Build a CD image:</p>
+
+<pre><code>mkdir cdimage
+mkdir cdimage/boot
+cp boot.img cdimage/boot
+mkisofs -r -b boot/boot.img -c boot/boot.catalog -o cdimage.iso cdimage
+</code></pre>
+
+<p>Then burn with your favorite CD burning program. Presto!</p>
+
+<!--# include file="include/bottom.html" -->
