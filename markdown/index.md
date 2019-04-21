@@ -39,6 +39,7 @@
 1. 2009-Sep-11: [Confusing BIND with CNAMEs](2009-09-11-confusing-bind-with-cnames.html)
 1. 2009-Feb-19: [The odd case of my mugging](2019-02-19-the-odd-case-of-my-mugging.html)
 1. 2009-Feb-03: [5-packet TCP connection?](2009-02-03-5-packet-tcp-connection.html)
+1. 2006-Sep-22: [CD-ROM multi-drive sarge installation](2006-09-22-cdrom-multi-drive-sarge-installation.html)
 1. 2006-Jul-23: [sqlsearch 1.1.0](2006-07-23-sqlsearch-1-1-0.html)
 1. 2006-Jul-20: [sqlsearch 1.0.0](2006-07-20-sqlsearch-1-0-0.html)
 1. 2006-Jul-08: [My DVD drive won’t play movies](2006-07-08-my-dvd-drive-wont-play-movies.html)
