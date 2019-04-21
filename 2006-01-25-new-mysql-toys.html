@@ -1,0 +1,41 @@
+<!--# set var="title" value="New MySQL toys" -->
+<!--# set var="date" value="January 25, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>In 5.1.5:</p>
+
+<pre><code>SELECT ExtractValue(’&lt;a&gt;foo&lt;b&gt;bar&lt;/b&gt;&lt;/a&gt;’, ‘//b’);
+
+    bar
+
+SELECT UpdateXML(’&lt;a&gt;foo&lt;b&gt;bar&lt;/b&gt;&lt;/a&gt;’, ‘//b’, ‘zig’);
+
+    &lt;a&gt;foozig&lt;/a&gt;
+</code></pre>
+
+<p>XSLT implementation on its way, maybe? :)</p>
+
+<p>In 5.1.6:</p>
+
+<pre><code>CREATE EVENT e
+ON SCHEDULE EVERY 1 DAY
+ON COMPLETION PRESERVE
+DO INSERT INTO log VALUES (1);
+</code></pre>
+
+<p><em>(think cron)</em></p>
+
+<p>And:</p>
+
+<pre><code>CREATE EVENT e
+ON SCHEDULE AT ‘2006-01-01 03:00:00′
+ON COMPLETION NOT PRESERVE
+DO OPTIMIZE TABLE foo;
+</code></pre>
+
+<p><em>(think at)</em></p>
+
+<p>The server variable “event_scheduler” has to be set to 1 for these to work.</p>
+
+<!--# include file="include/bottom.html" -->
