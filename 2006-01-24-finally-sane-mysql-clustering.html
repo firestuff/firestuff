@@ -1,0 +1,91 @@
+<!--# set var="title" value="Finally, sane MySQL clustering" -->
+<!--# set var="date" value="January 24, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>As of MySQL 5.1.5, we’ve finally got <a href="http://dev.mysql.com/doc/refman/5.1/en/replication-row-based.html">row-based replication</a>. This is the last piece of the puzzle to make circular replication usable. Here’s how:</p>
+
+<p>I’m assuming two MySQL servers, A and B. You can, however, use as many as you want, as long as they all somehow pull the logs from all the others.</p>
+
+<p>Set the following config variables on both servers:</p>
+
+<pre><code>server-id=&lt;unique number per server&gt;
+log-bin=&lt;hostname&gt;-bin
+relay-log=&lt;hostname&gt;-bin
+log-slave-updates # really only necessary in circular replication &gt; 2 servers
+binlog-format=row
+</code></pre>
+
+<p>Using the MySQL client, create replication users on both servers:</p>
+
+<pre><code>GRANT REPLICATION SLAVE ON *.* TO repl@’%’ IDENTIFIED BY ‘&lt;password&gt;’;
+</code></pre>
+
+<p>Then set master information on both servers, start replication and check that it’s working:</p>
+
+<pre><code>CHANGE MASTER TO MASTER_HOST=’&lt;address of other server&gt;‘, MASTER_USER=’repl’, MASTER_PASSWORD=’&lt;password&gt;‘;
+START SLAVE;
+SHOW SLAVE STATUS\G
+</code></pre>
+
+<p>You should now be able to see multi-master replication in action:</p>
+
+<p>On A:</p>
+
+<pre><code>CREATE DATABASE repl_test;
+SHOW DATABASES;
+</code></pre>
+
+<p>On B:</p>
+
+<pre><code>SHOW DATABASES;
+DROP DATABASE repl_test;
+SHOW DATABASES;
+</code></pre>
+
+<p>On A:</p>
+
+<pre><code>SHOW DATABASES;
+</code></pre>
+
+<h3>The AUTO_INCREMENT problem</h3>
+
+<p>AUTO_INCREMENT-type columns get used in just about every MySQL table. They’re a quick way to build primary keys without thinking. However, there are obvious problems in a multi-master setup (if inserts happen on both servers at the same time, they’ll both get the same ID). The official MySQL solution (start the IDs on both servers at numbers significantly different from each other) is a nasty hack.</p>
+
+<p>However, we’ve had <a href="http://dev.mysql.com/doc/refman/5.1/en/triggers.html">triggers</a> in InnoDB tables since MySQL 5.0, and with row-level replication, handy functions like <a href="http://dev.mysql.com/doc/refman/5.1/en/miscellaneous-functions.html#id2906147">UUID()</a> now replicate properly. This gives us a neat solution. On A:</p>
+
+<pre><code>CREATE DATABASE IF NOT EXISTS test;
+USE test;
+CREATE TABLE repl_test (id CHAR(36) BINARY, test INT) ENGINE=InnoDB;
+
+delimiter //
+
+CREATE TRIGGER repl_test_before_insert BEFORE INSERT ON repl_test FOR EACH ROW
+BEGIN
+IF NEW.id IS NULL THEN
+SET NEW.id = UUID();
+END IF;
+SET @repl_test_last_insert_id = NEW.id;
+END
+//
+
+delimiter ;
+
+INSERT INTO repl_test SET test=5;
+SELECT * FROM repl_test;
+SELECT @repl_test_last_insert_id;
+</code></pre>
+
+<p>On B:</p>
+
+<pre><code>SELECT * FROM repl_test;
+INSERT INTO repl_test SET test=6;
+SELECT * FROM repl_test;
+</code></pre>
+
+<p>On A:</p>
+
+<pre><code>SELECT * FROM repl_test;
+</code></pre>
+
+<!--# include file="include/bottom.html" -->
