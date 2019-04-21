@@ -39,6 +39,7 @@
 1. 2009-Sep-11: [Confusing BIND with CNAMEs](2009-09-11-confusing-bind-with-cnames.html)
 1. 2009-Feb-19: [The odd case of my mugging](2019-02-19-the-odd-case-of-my-mugging.html)
 1. 2009-Feb-03: [5-packet TCP connection?](2009-02-03-5-packet-tcp-connection.html)
+1. 2006-Jun-06: [KORG MicroKontrol in Linux](2006-06-06-korg-microkontrol-in-linux.html)
 1. 2006-Apr-07: [IBM Z60m in Linux](2006-04-07-ibm-z60m-in-linux.html)
 1. 2006-Mar-21: [HP ProCurve 2824 Mini-Review](2006-03-21-hp-procurve-2824-mini-review.html)
 1. 2006-Mar-21: [Redundant Network Interfaces](2006-03-21-redundant-network-interfaces.html)
