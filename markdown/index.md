@@ -39,6 +39,7 @@
 1. 2009-Sep-11: [Confusing BIND with CNAMEs](2009-09-11-confusing-bind-with-cnames.html)
 1. 2009-Feb-19: [The odd case of my mugging](2019-02-19-the-odd-case-of-my-mugging.html)
 1. 2009-Feb-03: [5-packet TCP connection?](2009-02-03-5-packet-tcp-connection.html)
+1. 2007-Jan-09: [USB/Serial in Linux](2007-01-09-usb-serial-in-linux.html)
 1. 2006-Dec-05: [Fixing your home/SOHO network](2006-12-05-fixing-your-home-soho-network.html)
 1. 2006-Nov-15: [Getting network-manager to forget](2006-11-15-getting-network-manager-to-forget.html)
 1. 2006-Oct-30: [X got jumpy during my Dapper -> Edgy upgrade](2006-10-30-x-got-jumpy-during-my-dapper-edgy-upgrade.html)
