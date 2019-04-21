@@ -1,0 +1,54 @@
+<!--# set var="title" value="Spanning Tree Protocol Introduction" -->
+<!--# set var="date" value="March 16, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>I’ve been considering increased network redundancy for awhile. After trying a few more things live than I should have, I decided to set up some gear in the lab and do some testing. First up is spanning tree.</p>
+
+<p>STP is, simply, an ethernet-level protocol for disabling redundant links until they’re needed to avoid loops (which effectively kill ethernet networks). It works by electing a root “bridge” (meaning switch in this case). Every other bridge checks to see if it has more than one link to the root; if it does, it puts every link but one in blocking state. This lets you build neat redundant networks:</p>
+
+<p><img src="data:image/png;base64,<!--# include file="images/stp.png.base64" -->" alt=""></p>
+
+<p>(<strong>A</strong>, <strong>B</strong> and <strong>C</strong> are switches; <strong>1</strong> and <strong>2</strong> are servers)</p>
+
+<p>I just plugged the above arrangement in (three Catalyst 2950s) and it worked. STP is enabled on Cisco switches by default.</p>
+
+<p>A little closer examination showed more details. On <strong>B</strong>:</p>
+
+<pre><code>#show spanning-tree
+….
+This bridge is the root
+….
+Fa0/2 Desg FWD
+Fa0/3 Desg FWD
+</code></pre>
+
+<p><strong>B</strong> is the root, and both links out of it are “desg” — designated links to those switch segments and “FWD” — forwarding packets.</p>
+
+<p>On <strong>A</strong>:</p>
+
+<pre><code>#show spanning-tree
+….
+Fa0/1 Desg FWD
+Fa0/2 Root FWD
+</code></pre>
+
+<p>This is the first oddity: Fa0/1 links to <strong>C</strong>, and should be blocking. However, apparently only one end of each link blocks. The switch knows that Fa0/2 is a link to the root bridge.</p>
+
+<p>On <strong>C</strong>:</p>
+
+<pre><code>#show spanning-tree
+….
+Fa0/1 Altn BLK
+Fa0/3 Root FWD
+</code></pre>
+
+<p>This switch has realized that there’s a loop, and blocked the port that provides the longest route to the root bridge, as expected.</p>
+
+<p>Now, I start a ping of <strong>2</strong> from <strong>1</strong>. Then I unplug the link between <strong>A</strong> and <strong>B</strong> that is currently carrying the traffic. The ping stops. 49 seconds later, it starts again. The Fa0/1 interface on <strong>C</strong> went from BLK to LIS to LRN to FWD.</p>
+
+<p>Now, I plug the link back in. The ping stops again. Fa0/1 on <strong>C</strong> sees the loop immediately and goes to BLK. The restored interface on <strong>B</strong> goes to LIS, then LRN, and finally FWD. The ping resumes in 31 seconds.</p>
+
+<p>Spanning tree isn’t particularly fast, and it doesn’t really “route”. Ethernet packets often traverse less-than-optimal paths through the switch fabric since STP doesn’t care where they came from or where they’re going; it only shuts down interfaces that might loop. Nevertheless, it’s simple and effective at building switch redundancy.</p>
+
+<!--# include file="include/bottom.html" -->
