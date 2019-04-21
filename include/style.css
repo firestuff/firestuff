@@ -85,8 +85,9 @@ h4 {
 	font-weight: bold;
 }
 
-ul li {
-	margin-bottom: 10px;
+ul li, ol li {
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 code {

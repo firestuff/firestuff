@@ -1,0 +1,55 @@
+<!--# set var="title" value="How to install Debian Sarge on an IBM Blade" -->
+<!--# set var="date" value="January 23, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>This is, unfortunately, complicated. You’ll need:</p>
+
+<ul>
+<li><a href="http://mirror.cs.wisc.edu/pub/mirrors/linux/debian-cd/3.1_r1/i386/bt-dvd/debian-31r1-i386-binary-1.iso.torrent">The full DVD #1 of Sarge</a></li>
+<li>A USB drive containing:
+<ul>
+<li><a href="files/fixup-network.sh">fixup-network.sh</a></li>
+<li><a href="files/bcm5700-source_7.3.5-4_all.deb">bcm5700-source_7.3.5-4_all.deb</a></li>
+<li>kernel-headers-2.6.8-2_2.6.8-16_i386.deb [link broken in platform transfer]</li>
+<li><a href="files/kernel-headers-2.6.8-2-686_2.6.8-16_i386.deb">kernel-headers-2.6.8-2-686_2.6.8-16_i386.deb</a></li>
+<li><a href="files/kernel-headers-2.6.8-2-686-smp_2.6.8-16_i386.deb">kernel-headers-2.6.8-2-686-smp_2.6.8-16_i386.deb</a></li>
+</ul></li>
+</ul>
+
+<p>Steps:</p>
+
+<ol>
+<li>Attach the USB drive</li>
+<li>Boot the blade from the DVD</li>
+<li>At the boot prompt, type: <code>linux26 vga=771</code></li>
+<li>Go through the install as normal. Note that the drives are out of order (USB drive is first).</li>
+<li>When asked “Do you want to install the GRUB bootloader to the master boot record?”, say No.</li>
+<li>Enter <em>/dev/sdb</em> to install to.</li>
+<li>The install will reboot.</li>
+<li>Let the disc eject or, if remote, change the boot order to boot from HD first.</li>
+<li>GRUB will error when trying to boot; dismiss the error message.</li>
+<li>Press “e” to edit the boot commands. Change “(hd1,0)” to “(hd0,0)” and “/dev/sdb1″ to “/dev/sda1″.</li>
+<li>Press “b” to boot.</li>
+<li>Use the “cdrom” access method for apt.</li>
+<li>Go through the install as normal.</li>
+<li>Log in as root.</li>
+<li>Edit /etc/fstab, correcting the drive lettering for any partitions that are messed up.</li>
+<li>Run: <code>mount /boot</code></li>
+<li>Edit /boot/grub/menu.lst, changing the lines starting with “# kopt=” and “# groot=” to reflect the changes made during boot.</li>
+<li>Run: <code>update-grub</code></li>
+<li>If you configured RAID during installation, edit /etc/mdadm/mdadm.conf to reflect drive letter changes.</li>
+<li>Mount the USB drive on /mnt.</li>
+<li>Run: <code>apt-get install module-assistant kernel-kbuild-2.6-3 debhelper kernel-image-2.6.8-2-686-smp build-essential</code>
+(the non-SMP image will also work, if you want this off)</li>
+<li>Run: <code>dpkg -i /mnt/bcm5700-source_7.3.5-4_all.deb /mnt/kernel-headers-2.6.8-2_2.6.8-16_i386.deb /mnt/kernel-headers-2.6.8-2-686_2.6.8-16_i386.deb /mnt/kernel-headers-2.6.8-2-686-smp_2.6.8-16_i386.deb</code></li>
+<li>Run: <code>cp /mnt/fixup-network.sh /etc/init.d/</code></li>
+<li>Run: <code>reboot</code></li>
+<li>When the machine reboots, run: <code>module-assistant prepare</code></li>
+<li>Run: <code>module-assistant auto-install bcm5700</code></li>
+<li>Run: <code>update-rc.d fixup-network.sh start 34 0 6 S .</code></li>
+<li>Run: <code>reboot</code></li>
+<li>The machine should now be usable. If you’ve got the BladeCenter internal Cisco switch, the install has probably triggerred flap suppression. telnet to the switch and shutdown/noshutdown the port (hints: show int status, conf t, int <em>interfacename</em>, shutdown, no shutdown).</li>
+</ol>
+
+<!--# include file="include/bottom.html" -->
