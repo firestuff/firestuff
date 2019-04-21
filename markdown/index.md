@@ -39,6 +39,7 @@
 1. 2009-Sep-11: [Confusing BIND with CNAMEs](2009-09-11-confusing-bind-with-cnames.html)
 1. 2009-Feb-19: [The odd case of my mugging](2019-02-19-the-odd-case-of-my-mugging.html)
 1. 2009-Feb-03: [5-packet TCP connection?](2009-02-03-5-packet-tcp-connection.html)
+1. 2006-Mar-02: [Why is my directory empty and large?](2006-03-02-why-is-my-directory-empty-and-large.html)
 1. 2006-Feb-26: [Why isn’t mod\_auth\_pam working with NIS?](2006-02-26-why-isnt-mod_auth_pam-working-with-nis.html)
 1. 2006-Feb-26: [SCTP Part #1](2006-02-26-sctp-part-1.html)
 1. 2006-Feb-13: [Is sleep(3) effected by time changes?](2006-02-13-is-sleep-effected-by-time-changes.html)
