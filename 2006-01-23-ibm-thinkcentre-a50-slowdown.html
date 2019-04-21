@@ -1,0 +1,27 @@
+<!--# set var="title" value="IBM ThinkCentre A50 Slowdown" -->
+<!--# set var="date" value="January 23, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>I’ve got a bunch of IBM ThinkCentre A50 machines that can’t run linux-2.6, tested 2.6.8 - 2.6.15. They boot and work for up to 24 hours, then they just get horribly slow (60 seconds+ on any I/O). Sometimes, they speed up again for awhile, then slow down. A reboot always fixes it. The kernel sysrq backtrace of the issue is the oddest part. Here’s top hanging:</p>
+
+<pre><code>Sep 16 00:48:20 localhost kernel: top           S C0392F20     0  5582   4634                     (NOTLB)
+Sep 16 00:48:20 localhost kernel: c2859ebc 00000086 c45b8520 c0392f20 c2859f98 cf764f00 392f2780 000f62c9
+Sep 16 00:48:20 localhost kernel:        00000000 c45b8520 392f2780 000f62c9 c2858000 c2859ed0 00000246 00000000
+Sep 16 00:48:20 localhost kernel:        00000000 0221df22 c2859ed0 ce7ccc00 00000000 c02a853d c2859ed0 0221df22
+Sep 16 00:48:20 localhost kernel: Call Trace:
+Sep 16 00:48:20 localhost kernel:  [schedule_timeout+93/208] schedule_timeout+0x5d/0xd0
+Sep 16 00:48:20 localhost kernel:  [proc_pid_readdir+97/560] proc_pid_readdir+0x61/0x230
+Sep 16 00:48:20 localhost kernel:  [process_timeout+0/16] process_timeout+0x0/0x10
+Sep 16 00:48:20 localhost kernel:  [do_select+671/848] do_select+0x29f/0x350
+Sep 16 00:48:20 localhost kernel:  [proc_info_read+165/192] proc_info_read+0xa5/0xc0
+Sep 16 00:48:20 localhost kernel:  [__pollwait+0/208] __pollwait+0x0/0xd0
+Sep 16 00:48:20 localhost kernel:  [sys_select+578/992] sys_select+0x242/0x3e0
+Sep 16 00:48:20 localhost kernel:  [syscall_call+7/11] syscall_call+0x7/0xb
+</code></pre>
+
+<p>Blocking in I/O I can handle, but I/O on /proc?!?!</p>
+
+<p>Oh, and 2.4.27 works fine.</p>
+
+<!--# include file="include/bottom.html" -->
