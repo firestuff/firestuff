@@ -1,0 +1,13 @@
+<!--# set var="title" value="Stopping Debian from ejecting the CD-ROM during install" -->
+<!--# set var="date" value="September 23, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>Another remote Debian install annoyance: the installer auto-ejects the CD-ROM, and there’s no way to turn it off in sarge (there’s a boot parameter in etch).</p>
+
+<p>In sarge, when the question asking you “Install GRUB to the Master Boot Record?” appears, switch to the shell on console 2 (Alt-F2). Then run:</p>
+
+<pre><code>rm /target/usr/bin/eject
+</code></pre>
+
+<!--# include file="include/bottom.html" -->
