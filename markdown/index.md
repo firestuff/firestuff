@@ -39,6 +39,7 @@
 1. 2009-Sep-11: [Confusing BIND with CNAMEs](2009-09-11-confusing-bind-with-cnames.html)
 1. 2009-Feb-19: [The odd case of my mugging](2019-02-19-the-odd-case-of-my-mugging.html)
 1. 2009-Feb-03: [5-packet TCP connection?](2009-02-03-5-packet-tcp-connection.html)
+1. 2006-Jul-08: [My DVD drive won’t play movies](2006-07-08-my-dvd-drive-wont-play-movies.html)
 1. 2006-Jun-30: [Carrying Servers](2006-06-30-carrying-servers.html)
 1. 2006-Jun-28: [BladeCenter power hurts my head](2006-06-28-bladecenter-power-hurts-my-head.html)
 1. 2006-Jun-16: [HP Switch Revisited](2006-06-16-hp-switch-revisited.html)
