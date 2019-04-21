@@ -39,6 +39,7 @@
 1. 2009-Sep-11: [Confusing BIND with CNAMEs](2009-09-11-confusing-bind-with-cnames.html)
 1. 2009-Feb-19: [The odd case of my mugging](2019-02-19-the-odd-case-of-my-mugging.html)
 1. 2009-Feb-03: [5-packet TCP connection?](2009-02-03-5-packet-tcp-connection.html)
+1. 2006-Mar-21: [HP ProCurve 2824 Mini-Review](2006-03-21-hp-procurve-2824-mini-review.html)
 1. 2006-Mar-21: [Redundant Network Interfaces](2006-03-21-redundant-network-interfaces.html)
 1. 2006-Mar-16: [Spanning Tree Protocol Introduction](2006-03-16-spanning-tree-protocol-introduction.html)
 1. 2006-Mar-15: [M-Audio Fast Track Pro in Linux](2006-03-15-maudio-fast-track-pro-in-linux.html)
