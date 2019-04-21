@@ -1,0 +1,26 @@
+<!--# set var="title" value="Mail relaying with NetSuite" -->
+<!--# set var="date" value="March 3, 2006" -->
+
+<!--# include file="include/top.html" -->
+
+<p>When sending a reply to a valid “message.<msgid>@messages.netsuite.com” address, I discovered something interesting. <a href="http://netsuite.com/">NetSuite</a> uses these addresses to store a copy of the message with the order, then forwards the message along to the real destination. However, the forwarding method is busted.</p>
+
+<p>It translates the headers in the original message. I sent:</p>
+
+<pre><code>From: Ian Gulliver &lt;ian@penguinhosting.net&gt;
+To: “George Sasson (PAA)” &lt;messages.&lt;msgid&gt;@messages.netsuite.com&gt;
+Cc: ian-djmart@penguinhosting.net
+</code></pre>
+
+<p>It internally translated this to:</p>
+
+<pre><code>From: ian@penguinhosting.net
+To: george@proaudioamerica.com
+Cc: ian-djmart@penguinhosting.net
+</code></pre>
+
+<p>It then passed the message to its outgoing mail program, which <strong>reparsed the headers</strong>. In this case, it means that I got two copies of the message; one from my local MTA because of the CC, and one back from NetSuite because of the CC.</p>
+
+<p><a href="http://prolixium.com/">prox</a> helped me test this; it works when the CC isn’t coming back to the same host. That means it’s a valid relay method.</p>
+
+<!--# include file="include/bottom.html" -->
