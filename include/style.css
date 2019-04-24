@@ -105,10 +105,9 @@ code {
 	font-family: monospace, Courier;
 	font-size: 16px;
 
-	background-color: #e8e8e8;
-	color: black;
+	color: green;
 
-	border: 1px solid black; 
+	border: 1px solid grey;
 
 	padding: 1ch;
 	margin: 1ch;
