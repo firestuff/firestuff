@@ -17,6 +17,10 @@ a {
 	text-decoration: underline dotted;
 }
 
+a:hover {
+	color: red;
+}
+
 p {
 	text-align: justify;
 }
@@ -43,7 +47,12 @@ h1, h2, h3, h4 {
 	font-size: 17px;
 }
 
+h1 {
+	color: red;
+}
+
 h1 a {
+	color: red;
 	text-decoration: none;
 }
 
