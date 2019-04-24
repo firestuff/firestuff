@@ -76,7 +76,7 @@
 1. 2006-Jan-23: [IBM ThinkCentre A50 Slowdown](2006-01-23-ibm-thinkcentre-a50-slowdown.html)
 1. 2006-Jan-23: [SSH Tunnelling 101](2006-01-23-ssh-tunnelling-101.html)
 1. 2006-Jan-23: [How to install Debian Sarge on an IBM Blade](2006-01-23-how-to-install-debian-sarge-on-an-ibm-blade.html)
-1. 2006-Jan-22: [Why does my machine think its name is localhost...](2006-01-22-why-does-my-machine-think-its-name-is-localhost-even-though-i-changed-it.html)
+1. 2006-Jan-22: [Why does my machine think its name is localhost even though I changed it?](2006-01-22-why-does-my-machine-think-its-name-is-localhost-even-though-i-changed-it.html)
 1. 2006-Jan-22: [Flashing without Microsoft or floppy drives](2006-01-22-flashing-without-microsoft-or-floppy-drives.html)
 
 <!--# include file="include/bottom.html" -->
