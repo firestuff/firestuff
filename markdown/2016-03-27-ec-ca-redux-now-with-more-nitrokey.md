@@ -25,7 +25,7 @@ XXXX is still our placeholder of choice.
 
 ### Create openssl.cnf
 
-    cat > openssl.cnf &lt;&lt;'END'
+    cat > openssl.cnf <<'END'
     openssl_conf = openssl_init
     [ openssl_init ]
     engines = engines

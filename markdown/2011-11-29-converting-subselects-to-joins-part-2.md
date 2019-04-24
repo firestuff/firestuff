@@ -18,7 +18,7 @@ You have a table of Users and a table of Logins, with a row for each user login 
             FROM Logins
             GROUP BY UserId
         ) AS Temp USING (UserId)
-      WHERE LastLogin &lt;= 31;
+      WHERE LastLogin <= 31;
 
 We can convert this to a simple JOIN with the magic of HAVING. HAVING is like WHERE, but applies after aggregation:
 
@@ -28,6 +28,6 @@ We can convert this to a simple JOIN with the magic of HAVING. HAVING is like WH
       FROM Users
         JOIN Logins USING (UserId)
       GROUP BY UserId
-      HAVING LastLogin &lt;= 31;
+      HAVING LastLogin <= 31;
 
 <!--# include file="include/bottom.html" -->

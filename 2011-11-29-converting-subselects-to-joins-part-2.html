@@ -18,7 +18,7 @@
         FROM Logins
         GROUP BY UserId
     ) AS Temp USING (UserId)
-  WHERE LastLogin &amp;lt;= 31;
+  WHERE LastLogin &lt;= 31;
 </code></pre>
 
 <p>We can convert this to a simple JOIN with the magic of HAVING. HAVING is like WHERE, but applies after aggregation:</p>
@@ -29,7 +29,7 @@
   FROM Users
     JOIN Logins USING (UserId)
   GROUP BY UserId
-  HAVING LastLogin &amp;lt;= 31;
+  HAVING LastLogin &lt;= 31;
 </code></pre>
 
 <!--# include file="include/bottom.html" -->
