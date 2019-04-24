@@ -11,7 +11,7 @@ The most elegant solution seems to be a [force-directed graph](http://en.wikiped
 
 Today, I got to build a visualization that [went public](http://www.google.com/appserve/fiberrfi):
 
-<img src="data:image/png;base64,<!--# include file="images/fiberrfi-map.png.base64" -->" alt="">
+<img src="data:image/webp;base64,<!--# include file="images/fiberrfi-map.webp.base64" -->" alt="">
 
 We had lots of data from the fiber-to-the-home request-for-information site, and needed a way to visualize it. This is a [geo map](http://code.google.com/apis/visualization/documentation/gallery/geomap.html) that uses markers. Unfortunately, the API limits you to 400 points, which wasn't enough, so I (at nmlorg's suggestion) screenshotted the map with 400 points at a time and stitched the results; hacky, but functional. We couldn't have used the direct rendering anyway, as it does one AJAX call to Google Maps to look up each point (we were passing in ZIP codes), so it takes ~10 minutes to render.
 

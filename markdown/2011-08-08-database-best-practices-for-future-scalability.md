@@ -10,7 +10,7 @@ There’s a perpetual debate about how much effort to put into scalability when 
 1. Don’t store data that you don’t intend to use relationally. Using MySQL as a key/value store or to store encoded data (XML, [protocol buffers](http://code.google.com/p/protobuf/), etc.) in BLOB/TEXT may work, but dedicated key/value stores are likely to be more efficient.
 
 1. Try to design your schema with as few hierarchies as possible. For example, take the following table layout, with arrows representing many-to-one relationships:Perhaps A=”Users”, B=”DVDs Owned”, C=”Logins”, D=”Times Watched”, while E=”Administrators” and F=”Changes”. These are two hierarchies, since A and E have no links to each other. Minimizing the number of hierarchies (keeping it to just one is awesome!) makes it easier to shard later. Schemas with cross-links (say F also links to A, or a table records transfers between two different users, linking to A twice) are very difficult to shard.<br>
-   <img src="data:image/png;base64,<!--# include file="images/db-hierarchy.png.base64" -->" alt="" style="background: white;">
+   <img src="data:image/webp;base64,<!--# include file="images/db-hierarchy.webp.base64" -->" alt="" style="background: white;">
 
 1. Use BIGINT UNSIGNED NOT NULL (64-bit required numeric) primary keys on every table. AUTO\_INCREMENT is fine, at least to start. You can skip this for many-to-many link tables; just put both link columns in the primary key. Having single-column, numeric primary keys makes it easier to do things like drift checking and traversing between tables.
 

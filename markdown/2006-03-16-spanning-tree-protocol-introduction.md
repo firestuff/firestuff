@@ -7,7 +7,7 @@ I’ve been considering increased network redundancy for awhile. After trying a 
 
 STP is, simply, an ethernet-level protocol for disabling redundant links until they’re needed to avoid loops (which effectively kill ethernet networks). It works by electing a root “bridge” (meaning switch in this case). Every other bridge checks to see if it has more than one link to the root; if it does, it puts every link but one in blocking state. This lets you build neat redundant networks:
 
-<img src="data:image/png;base64,<!--# include file="images/stp.png.base64" -->" alt="">
+<img src="data:image/webp;base64,<!--# include file="images/stp.webp.base64" -->" alt="">
 
 (__A__, __B__ and __C__ are switches; __1__ and __2__ are servers)
 

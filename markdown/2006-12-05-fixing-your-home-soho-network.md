@@ -18,7 +18,7 @@ You get what you pay for
 ### Sorting out the devices
 
 1. Diagram your network. Knowing what you have and how it’s all connected together is a critical first step toward fixing any of it. A complete diagram looks like:<br>
-   <img src="data:image/png;base64,<!--# include file="images/sample-network.png.base64" -->" alt=""><br>
+   <img src="data:image/webp;base64,<!--# include file="images/sample-network.webp.base64" -->" alt=""><br>
    (the diagram above was made with [dia](http://dia-installer.sourceforge.net/), a free diagramming software)
 1. Count up devices doing Network Address Translation (NAT; sometimes referred to as PNAT). These are usually marketed as routers or firewalls. It’s common (and completely acceptable) to have __one__ such device, directly connected to the Internet and “in front” of all other devices. There should never be more than one; doing multiple translations will cause nothing but problems. The one such is device is also the most likely failure point; this is the place to spend real money. However, avoid anything labeled “firewall” unless you really know that you need some feature that it offers. NAT alone is enough to keep out any attacks that connect in from the Internet.
 1. Repeating myself form the previous step: look __hard__ at your diagram. Do you see any routers that could be replaced with switches? Do you see any wireless routers that could be replaced with wireless access points?
