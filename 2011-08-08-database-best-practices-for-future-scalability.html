@@ -27,8 +27,7 @@
 <li><p>Don’t store event-based data as one row per event. If you record page views or clicks in the database, aggregate that data into one row per hour, or per day. You can keep logs of events outside of the database in case you need to change aggregation and re-generate historical data, but don’t keep every event in a hot table.</p></li>
 <li><p>Stop using AUTO_INCREMENT. Instead, keep a table <a href="http://www.reddit.com/r/mysql/comments/jcw8o/database_best_practices_for_future_scalability/c2b2o4v">IdSequences</a>, and do something like: </p>
 
-<p><code>
-BEGIN;
+<p><code>BEGIN;
 UPDATE IdSequences SET LastId=LAST_INSERT_ID(LastId+Increment)
  WHERE TableName='A' AND ColumnName='b';
 INSERT INTO A (b, c) VALUES (LAST_INSERT_ID(), ‘foo’);
