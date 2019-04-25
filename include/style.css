@@ -45,6 +45,7 @@ header, footer {
 
 footer {
 	filter: grayscale(1.0);
+	user-select: none;
 }
 
 header a {
