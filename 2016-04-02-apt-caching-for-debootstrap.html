@@ -5,18 +5,18 @@
 
 <p>If you’re building system images, you’re going to do a lot of debootstrap, which is going to fetch a lot of packages. On a fast system, that’ll be the slowest part of the process. Here’s how to cache.</p>
 
-<h3>Install apt-cacher-ng</h3>
+<h2>Install apt-cacher-ng</h2>
 
 <pre><code>sudo apt-get install squid-deb-proxy
 </code></pre>
 
-<h3>Tell programs to use the proxy</h3>
+<h2>Tell programs to use the proxy</h2>
 
 <pre><code>export http_proxy=http://127.0.0.1:8000
 # Note that you'll need to re-export this before any use of debootstrap
 </code></pre>
 
-<h3>Tell sudo to pass through http_proxy</h3>
+<h2>Tell sudo to pass through http_proxy</h2>
 
 <pre><code>sudo visudo
 # Add the line after the env_reset line:

@@ -13,16 +13,16 @@
 
 <p>Below are the steps to get the Nitrokey HSM to a working state where it can generate an EC key pair, and (self-)sign a cert with it. Hopefully many of these go away in the future, as support percolates into release versions and distribution packages.</p>
 
-<h3>Hardware &amp; setup</h3>
+<h2>Hardware &amp; setup</h2>
 
 <p>These instructions were developed and tested on a Raspberry Pi. Base setup instructions are here. You’ll also need a Nitrokey HSM, obviously.</p>
 
-<h3>Install prerequisites</h3>
+<h2>Install prerequisites</h2>
 
 <pre><code>sudo apt-get install pcscd libpcsclite-dev libssl-dev libreadline-dev autoconf automake build-essential docbook-xsl xsltproc libtool pkg-config git
 </code></pre>
 
-<h3>libccid</h3>
+<h2>libccid</h2>
 
 <p>You’ll need a <a href="https://www.nitrokey.com/documentation/frequently-asked-questions#which-gnupg,-opensc-and-libccid-versions-are-required">newer version of libccid</a> than currently exists in Raspbian Jessie (1.4.22 > 1.4.18). You can download it for your platform here, or use the commands below for an RPi.</p>
 
@@ -30,7 +30,7 @@
 sudo dpkg -i libccid_1.4.22-1_armhf.deb
 </code></pre>
 
-<h3>Install libp11</h3>
+<h2>Install libp11</h2>
 
 <p>engine_pkcs11 requires >= 0.3.1. Raspbian Jessie has 0.2.8. Debian sid <a href="https://packages.debian.org/sid/libp11-2">has a package</a>, but you need the dev package as well, so you might as well build it.</p>
 
@@ -43,7 +43,7 @@ sudo make install
 cd ..
 </code></pre>
 
-<h3>Install engine_pkcs11</h3>
+<h2>Install engine_pkcs11</h2>
 
 <p>EC <a href="https://www.nitrokey.com/forum/viewtopic.php?t=1549">requires engine_pkcs11 >= 0.2.0</a>. Raspbian Jessie has 0.1.8. Debian <a href="https://packages.debian.org/sid/libengine-pkcs11-openssl">sid also has a package</a> that I haven’t tested.</p>
 
@@ -56,7 +56,7 @@ sudo make install
 cd ..
 </code></pre>
 
-<h3>Install OpenSC</h3>
+<h2>Install OpenSC</h2>
 
 <p>As of writing (2016/Mar/26), working support for the Nitrokey HSM <a href="https://www.nitrokey.com/documentation/frequently-asked-questions#which-gnupg,-opensc-and-libccid-versions-are-required">requires a build of OpenSC</a> that hasn’t made it into a package yet (0.16.0). They’ve also screwed up their repository branching, so master is behind the release branch and won’t work.</p>
 
@@ -69,24 +69,24 @@ sudo make install
 cd ..
 </code></pre>
 
-<h3>Misc</h3>
+<h2>Misc</h2>
 
 <pre><code>sudo ldconfig
 </code></pre>
 
-<h3>Initialize the device</h3>
+<h2>Initialize the device</h2>
 
 <pre><code>/usr/local/bin/sc-hsm-tool --initialize
 </code></pre>
 
 <p>If this tells you that it can’t find the device, you probably forgot to update libccid, and need to start over. You’ll need to set an SO PIN and PIN the first time. The SO PIN should be 16 characters, and the PIN 6. Both should be all digits. They can technically be hex, but some apps get confused if they see letters.</p>
 
-<h3>Generate a test EC key pair</h3>
+<h2>Generate a test EC key pair</h2>
 
 <pre><code>/usr/local/bin/pkcs11-tool --module /usr/local/lib/opensc-pkcs11.so---login --keypairgen --key-type EC:prime256v1 --label test
 </code></pre>
 
-<h3>Generate a self-signed cert</h3>
+<h2>Generate a self-signed cert</h2>
 
 <pre><code>openssl
 OpenSSL&gt; engine -t -pre SO_PATH:/usr/lib/arm-linux-gnueabihf/openssl-1.0.0/engines/libpkcs11.so -pre ID:pkcs11 -pre LIST_ADD:1 -pre LOAD -pre MODULE_PATH:/usr/local/lib/pkcs11/opensc-pkcs11.so dynamic

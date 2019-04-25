@@ -5,7 +5,7 @@
 
 <p>Down another rabbit hole, this time into yet another seemingly simple problem: how do you turn a name into an address that you can connect() to without blocking your thread, in 2016. Let’s survey state of the world:</p>
 
-<h3><a href="http://man7.org/linux/man-pages/man3/getaddrinfo_a.3.html">getaddrinfo_a()</a></h3>
+<h2><a href="http://man7.org/linux/man-pages/man3/getaddrinfo_a.3.html">getaddrinfo_a()</a></h2>
 
 <p>Look, it’s exactly what we need! Just joking. It’s has the same resolution behavior as getaddrinfo, but:</p>
 
@@ -15,7 +15,7 @@
 <li>It uses <a href="http://man7.org/linux/man-pages/man7/sigevent.7.html">sigevent</a> to notify completion. This gives you a choice between a signal and a new thread. I thought we were doing this to avoid having to create a new thread for each resolution?</li>
 </ul>
 
-<h3><a href="http://www.gnu.org/software/adns/">libadns</a></h3>
+<h2><a href="http://www.gnu.org/software/adns/">libadns</a></h2>
 
 <ul>
 <li>It’s GPLed. That’s cool, but it does limit options.</li>
@@ -23,7 +23,7 @@
 <li>It will hand you file descriptors to block on, but you have to ask (using adns_beforeselect()). This is designed for poll(), but doesn’t work well with epoll; it doesn’t tell you when to add and remove fds, so you have to track them yourself (since you can’t iterate an epoll set), diff them since the last result, and change the epoll set. It’s a mess.</li>
 </ul>
 
-<h3><a href="http://0pointer.de/lennart/projects/libasyncns/">libasyncns</a></h3>
+<h2><a href="http://0pointer.de/lennart/projects/libasyncns/">libasyncns</a></h2>
 
 <ul>
 <li>It uses getaddrinfo() underneath, so you get standard behavior. Woo!</li>
@@ -31,7 +31,7 @@
 <li>Its API isn’t too crazy, but you wouldn’t call it simple.</li>
 </ul>
 
-<h3><a href="http://c-ares.haxx.se/">c-ares</a></h3>
+<h2><a href="http://c-ares.haxx.se/">c-ares</a></h2>
 
 <p>I failed to find docs for this, but I found a gist with an <a href="https://gist.github.com/mopemope/992777">example</a>. Looks like the API is designed for use with select(), though there’s a hook to get an fd when it’s created, so you might be able to associate it with a query, possibly unreliably. Again, you’d have to recreate getaddrinfo() behavior yourself. Also, this gem is at the top of the header:</p>
 
@@ -46,7 +46,7 @@
 
 <p>So maybe not.</p>
 
-<h3>So now what?</h3>
+<h2>So now what?</h2>
 
 <p>Maybe we can build something. I really don’t need to write another DNS library in my lifetime (the c-ares <a href="http://c-ares.haxx.se/otherlibs.html">Other Libraries</a> page links to my previous one, humorously). Let’s see if we can scope some requirements:</p>
 

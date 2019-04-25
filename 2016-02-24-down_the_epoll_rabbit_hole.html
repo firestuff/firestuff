@@ -7,7 +7,7 @@
 
 <p>I’ll be showing observed behavior through strace and tcpdump output.</p>
 
-<h3>Setup</h3>
+<h2>Setup</h2>
 
 <p>Our test environment starts with two sockets connected to each other. There’s also a listening socket, only used to accept the initial connection, and an epoll fd. Both of the connected sockets are added to the epoll watch set, with most possible level-triggered flags enabled.</p>
 
@@ -39,7 +39,7 @@ epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLOUT, {u32=6, u64=6}}}, 8, 0) = 
 
 <p>We now have two file descriptors, 5 and 6, that are opposite ends of the same TCP connection. They’re both in the epoll set of epoll file descriptor 3. They’re both signaling writability (EPOLLOUT), and nothing else. All is as expected.</p>
 
-<h3>shutdown(SHUT_RD)</h3>
+<h2>shutdown(SHUT_RD)</h2>
 
 <p>Now let’s call shutdown(5, SHUT_RD).</p>
 
@@ -68,7 +68,7 @@ epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6, u64=6}}}, 8, 0) = 1
 
 <p>Side note: notice that close(5) causes automatic removal of that socket from the epoll set. This is handy, but see dup() below.</p>
 
-<h3>shutdown(SHUT_WR)</h3>
+<h2>shutdown(SHUT_WR)</h2>
 
 <p>Let’s rewind and test with SHUT_WR (write).</p>
 
@@ -103,7 +103,7 @@ epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP|EPOLLRDHUP, {u32=6, u64=6}}},
 
 <p>The only oddity here is that calling close(5) doesn’t change any of the epoll status flags for fd 6. Once you attempt to write to fd 6, however, every flag on the planet starts firing, including EPOLLERR and EPOLLHUP.</p>
 
-<h3>dup()</h3>
+<h2>dup()</h2>
 
 <p>Rewinding to our setup state again, let’s look at dup().</p>
 
@@ -134,7 +134,7 @@ epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6, u64=6}}}, 8, 0) = 1
 
 <p>Here’s crazy town, though. close(5) doesn’t remove it from the epoll set. epoll is waiting for the underlying socket to close, and fd 7’s existence is keeping it alive. Trying to remove fd 5 from the epoll set also fails. The only way to get rid of it seems to be to close(7), which removes both from the set and causes fd 6 to signal EPOLLIN and EPOLLRDHUP.</p>
 
-<h3>shutdown(SHUT_RD) + dup()</h3>
+<h2>shutdown(SHUT_RD) + dup()</h2>
 
 <pre><code>dup(5)                                  = 7
 epoll_ctl(3, EPOLL_CTL_ADD, 7, {EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP|EPOLLRDHUP, {u32=7, u64=7}}) = 0
@@ -147,7 +147,7 @@ epoll_wait(3, {{EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=5, u64=5}}, {EPOLLOUT, {u32=6,
 
 <p>The takeaway here is that shutdown() operates on the underlying socket endpoint, not the file descriptor. Calling shutdown(7, SHUT_RD) causes both fd 5 and 7 to signal EPOLLIN and EPOLLRDHUP.</p>
 
-<h3>shutdown(SHUT_WR) + dup()</h3>
+<h2>shutdown(SHUT_WR) + dup()</h2>
 
 <pre><code>dup(5)                                  = 7
 epoll_ctl(3, EPOLL_CTL_ADD, 7, {EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP|EPOLLRDHUP, {u32=7, u64=7}}) = 0
@@ -164,7 +164,7 @@ epoll_wait(3, {{EPOLLOUT, {u32=5, u64=5}}, {EPOLLIN|EPOLLOUT|EPOLLRDHUP, {u32=6,
 
 <p>As expected, shutdown(7, SHUT_WR) causes fd 6 to signal EPOLLIN and EPOLLRDHUP.</p>
 
-<h3>Conclusions</h3>
+<h2>Conclusions</h2>
 
 <ul>
 <li>If you’re using dup() and epoll, you need to call epoll_ctl(EPOLL_CTL_DEL) before calling close(). It’s hard to imagine getting sane behavior any other way. If you never use dup(), you can just call close().</li>

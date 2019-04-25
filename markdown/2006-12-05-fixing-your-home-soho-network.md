@@ -5,7 +5,7 @@
 
 This post is going to stray a bit from my usual geeky fare. I’m being asking far too much to help sort out haphazard home network designs that are causing real problems for their users. I decided to collect all the answers that I’ve given together in a single place that I can point to when asked.
 
-### General Principles
+## General Principles
 
 Simplicity
 
@@ -15,7 +15,7 @@ You get what you pay for
 
 > A Cisco Aironet is going to crash less than a Linksys access point. A Cisco switch is going to provide better throughput than a NetGear one. This isn’t a hard-and-fast rule; there are certainly decent, cheap network devices out there. However, generally, if a device has a plastic case and an external power supply and you’ve got more than 3 people depending on it, you’re going to regret the decision.
 
-### Sorting out the devices
+## Sorting out the devices
 
 1. Diagram your network. Knowing what you have and how it’s all connected together is a critical first step toward fixing any of it. A complete diagram looks like:<br>
    <img src="data:image/webp;base64,<!--# include file="images/sample-network.webp.base64" -->" alt=""><br>
@@ -32,7 +32,7 @@ You get what you pay for
 
    You should see one or more lines starting with DHCPOFFER and telling you where the offer came from. If you see more than one source of offers, you need to eliminate extra DHCP servers.
 
-### Troubleshooting slowness
+## Troubleshooting slowness
 
 By far the most common network issue seems to be nebulous “slowness”. We’ll try to eliminate possibilities one by one.
 
@@ -60,11 +60,11 @@ By far the most common network issue seems to be nebulous “slowness”. We’l
 
    You’ll want to make the window a bit bigger. This application gives you real time timing data following the route from your network to firestuff.org. Watch the average times and loss percentages. Nothing above 0% is really acceptable loss; your ISP will probably claim that it is, but they’re lying. Remember that the numbers are cumulative; if hop 3 is dropping packets, those drops will effect hop 3 and everything beyond it. However, it’s really hop 3’s problem, and if hop 6 has a problem, it’ll be hard to see until you get the closer issue cleared up.
 
-### Troubleshooting idle disconnects
+## Troubleshooting idle disconnects
 
 Do you have long-running connections (SSH, telnet, MySQL, etc.) that get disconnected when they’re not doing anything? It’s your NAT device’s fault. Period. If it doesn’t have a setting to change the maximum idle time for a connection, throw it out and buy one that does.
 
-### Troubleshooting wireless problems
+## Troubleshooting wireless problems
 
 1. Does rebooting your wireless router/access point fix it? Throw it out and buy a real one (I kept buying new Linksys/NetGear products until I gave up and started buying Cisco. Oddly, since then, things work).
 1. Are you in an area with a lot of access points? Time to switch to 802.11a; the hardware’s more expensive and less often included by default in laptops, but there are many more distinct channels (802.11b/g only has 3) and fewer other users.

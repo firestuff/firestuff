@@ -16,7 +16,7 @@ I’ve been doing alot of work on methods for using multiple network interfaces 
 1. Do you want your interfaces to share bandwidth when both are up?<br>
    Yes? __bonding:balance-alb__. No? __bonding:active-backup__.
 
-### STP
+## STP
 
 This bonding method actually uses Linux’s support for interface bridging. If a bridge is set up between two interfaces connected to the same network and spanning tree protocol is activated, one interface will be put into blocking state and won’t pass traffic. This doesn’t aggregate bandwidth between interfaces when both are up, but it has the interesting effect of allowing the server to bridge traffic between the switches if there are no other available connections. Special configuration at the switches is required to prevent it from being used as a link under normal circumstances.
 
@@ -57,7 +57,7 @@ And on the IOS switches:
 
 One side of one interface should be blocking.
 
-### bonding
+## bonding
 
 For any of the bonding methods, you’ll need the ifenslave program. In Debian:
 
@@ -78,7 +78,7 @@ Then run:
 
 	ifup bond0
 
-### bonding:active-backup
+## bonding:active-backup
 
 This bonding mode keeps one interface completely blocked (including not sending ARP replies out it), using it strictly as a backup.
 
@@ -88,7 +88,7 @@ First:
 
 Follow the general bonding instructions above, and you’re all set!
 
-### bonding:802.3ad
+## bonding:802.3ad
 
 This bonding mode uses the standardized IEEE 802.3ad bonding method, with a protocol (LACP) for both sides to agree on bonding information. All links must be the same speed and duplex. The balancing method between links is determined by each end; a single connection will only go over one link, and sometimes traffic with a single (ethernet-level) peer will use a single link as well.
 
@@ -110,7 +110,7 @@ After you’ve done this for all the interfaces:
 
 Then follow the general bonding instructions.
 
-### bonding:balance-alb
+## bonding:balance-alb
 
 This bonding mode balances outgoing traffic accoridng to interface speed and usage. It intercepts and rewrites outgoing ARP replies to make them come from different physical interfaces, tricking the network fabric into balancing incoming traffic as well.
 

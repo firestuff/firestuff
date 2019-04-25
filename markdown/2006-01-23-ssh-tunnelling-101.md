@@ -3,7 +3,7 @@
 
 <!--# include file="include/top.html" -->
 
-### The Players
+## The Players
 
 I’ll be referring to 3 hosts:
 
@@ -11,7 +11,7 @@ I’ll be referring to 3 hosts:
 * B: The bounce host; this machine is unfirewalled.
 * C: The client.
 
-### Configuring B
+## Configuring B
 
 Some sshd configuration needs to be done on B before any of this will work. In the sshd\_config file (/etc/ssh/sshd\_config on Debian):
 
@@ -20,7 +20,7 @@ Some sshd configuration needs to be done on B before any of this will work. In t
 
 Remember to restart sshd after making changes (/etc/init.d/ssh restart).
 
-### Building the Tunnel
+## Building the Tunnel
 
 On A, run:
 
@@ -34,7 +34,7 @@ You should now be able to connect to the port on B and be talking to A. To get t
 
 As with all shell commands, put a “&” on the end to run it in the background.
 
-### Tunnelling FTP
+## Tunnelling FTP
 
 Due to a trick in the FTP protocol, you can use this tunnelling arrangement but have FTP data connections go directly from A to C, without touching B. This only works with so-called “active” FTP (using the PORT command instead of PASV). C must also be unfirewalled for this to work.
 

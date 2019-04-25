@@ -15,7 +15,7 @@
 <li>Not assume that the WLAN MAC address is the only MAC at the other end of the link. This assumption is frequently used to reduce the effect of broadcast traffic in a WiFi environment by filtering. There may be settings like “Multicast optimization”, “Broadcast optimization”, or “DHCP optimization” that you need to turn off.</li>
 </ul>
 
-<h3>Bridging</h3>
+<h2>Bridging</h2>
 
 <p>Linux supports bridging. There’s a bridge-utils package in Ubuntu with the tools you need:</p>
 
@@ -35,7 +35,7 @@ can't add wlan0 to bridge br0: Operation not supported
 
 <p>Googling this error produces a wide range of well-meaning yet completely unhelpful results.</p>
 
-<h3>Enable 4 address mode</h3>
+<h2>Enable 4 address mode</h2>
 
 <p>To be able to add a WiFi interface to a bridge, you have to put it into 4-address mode first:</p>
 
@@ -53,7 +53,7 @@ sudo iw dev wlan0 set 4addr on
 
 <p>You should now be able to fetch an IP on br0 via DHCP. Unless, of course, you need wpa_supplicant to work…</p>
 
-<h3>wpa_supplicant</h3>
+<h2>wpa_supplicant</h2>
 
 <p>wpa_supplicant needs to be bridge-aware to work with 4-address mode. Fortunately, it has a flag (-b) to set the bridge interface. Unfortunately, this flag is broken in 2.1, the version in Ubuntu Trusty. I verified that it works in wpa_supplicant 2.5 built from source; I haven’t verified 2.4 from Xenial.</p>
 
@@ -64,7 +64,7 @@ sudo iw dev wlan0 set 4addr on
 
 <p>With that working, the interface should get to wpa_state=COMPLETED, and br0 should work normally. Remember that wlan0 will still be unusable directly.</p>
 
-<h3>Ordering</h3>
+<h2>Ordering</h2>
 
 <p>Bringing up these interfaces is tricky; the ordering is annoying.</p>
 
@@ -74,7 +74,7 @@ sudo iw dev wlan0 set 4addr on
 <li>wpa_supplicant must be running before you can get an IP address on br0</li>
 </ul>
 
-<h3>Putting it together</h3>
+<h2>Putting it together</h2>
 
 <p>Because of the ordering issues, it’s easier to treat this all as one interface that has to come up together. Here’s an example interface stanza that does this:</p>
 

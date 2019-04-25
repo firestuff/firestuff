@@ -11,31 +11,31 @@ I should really script this.
 
 Start with [Raspbian Lite](https://www.raspberrypi.org/downloads/raspbian/). NOOBS has an extra boot step, and Raspbian full version has a GUI and stuff like Wolfram Engine that you probably don’t want.
 
-### Log in
+## Log in
 
 Use console, or grab the IP from your router’s DHCP client list and:
 
     ssh pi@<ip address>
     # password "raspberry"
 
-### Expand filesystem
+## Expand filesystem
 
     sudo raspi-config --expand-rootfs
     sudo reboot
 
 Wait for reboot. Reconnect as above.
 
-### Update
+## Update
 
     sudo apt-get -y update
     sudo apt-get -y dist-upgrade
 
-### Update firmware
+## Update firmware
 
     sudo apt-get -y install rpi-update
     sudo rpi-update
 
-### Enable overclock (optional)
+## Enable overclock (optional)
 
 Pis seem to be relatively stable overclocked, even without a heatsink.
 
@@ -47,17 +47,17 @@ Pis seem to be relatively stable overclocked, even without a heatsink.
     # Select "<Finish>"
     # Select "<No>"
 
-### Disable swap
+## Disable swap
 
     sudo dphys-swapfile uninstall
 
-### Create a new user
+## Create a new user
 
     sudo adduser <username>
     # Follow prompts
     sudo usermod --append --groups sudo <username>
 
-### SSH in as the new user
+## SSH in as the new user
 
     # ON YOUR PI
     # Find your Pi's current IP, you don't know it
@@ -74,7 +74,7 @@ Pis seem to be relatively stable overclocked, even without a heatsink.
     # Connect to your Pi; this should NOT ask for a password
     ssh <username>@<ip>
 
-### Lock down sshd
+## Lock down sshd
 
 The SSH server has a lot of options turned on by default for compatibility with a wide range of clients. If you’re connecting only from modern machines, and you’ve gotten public key authentication working as described above (and tested it!), then you can turn off lots of the legacy options.
 
@@ -112,7 +112,7 @@ The SSH server has a lot of options turned on by default for compatibility with 
     END
     # Enter password for sudo
 
-### Enable the hardware random number generator
+## Enable the hardware random number generator
 
 Note that hardware random number generators [are controversial](https://en.wikipedia.org/wiki/RdRand#Reception).
 
@@ -120,7 +120,7 @@ Note that hardware random number generators [are controversial](https://en.wikip
     echo bcm2835_rng | sudo tee --append /etc/modules
     sudo apt-get -y install rng-tools
 
-### Enable the hardware watchdog
+## Enable the hardware watchdog
 
 This has false negatives (failures to reboot when it should) for me, but never false positives.
 
@@ -129,25 +129,25 @@ This has false negatives (failures to reboot when it should) for me, but never f
     watchdog-device = /dev/watchdog
     END
 
-### Enable automatic updates
+## Enable automatic updates
 
     sudo apt-get -y install unattended-upgrades
     sudo dpkg-reconfigure -plow unattended-upgrades
     # Choose "<Yes>"
 
-### Disable avahi
+## Disable avahi
 
 You didn’t need mdns, did you?
 
     sudo systemctl disable avahi-daemon.service
 
-### Disable triggerhappy
+## Disable triggerhappy
 
 You didn’t need volume buttons, did you?
 
     sudo systemctl disable triggerhappy.service
 
-### Disable frequency scaling
+## Disable frequency scaling
 
 If you’re not planning to run on battery; this thing is slow enough anyway.
 
@@ -156,7 +156,7 @@ If you’re not planning to run on battery; this thing is slow enough anyway.
     GOVERNOR="performance"
     END
 
-### Enable lldpd
+## Enable lldpd
 
 This allows you to observe network topology if you have managed switches.
 
@@ -165,25 +165,25 @@ This allows you to observe network topology if you have managed switches.
     DAEMON_ARGS="-c"
     END
 
-### Remove the pi user
+## Remove the pi user
 
 Well-known username, well-known password, no thank you.
 
     sudo deluser pi
 
-### Install busybox-syslogd
+## Install busybox-syslogd
 
 You give up persistent syslogs, but you reduce SD writes. You can still run “logread” to read logs since boot from RAM.
 
     sudo apt-get -y install busybox-syslogd
 
-### Reboot
+## Reboot
 
 Test that changes work, and have some (disabling auto-login) take effect.
 
     sudo reboot
 
-### After reboot
+## After reboot
 
 Note that ssh may scream “REMOTE HOST IDENTIFICATION HAS CHANGED!”; that’s a symptom of the sshd\_config changes above. Just remove the line from the known\_hosts file and reconnect.
 

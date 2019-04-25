@@ -11,7 +11,7 @@
 
 <p>Start with <a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian Lite</a>. NOOBS has an extra boot step, and Raspbian full version has a GUI and stuff like Wolfram Engine that you probably don’t want.</p>
 
-<h3>Log in</h3>
+<h2>Log in</h2>
 
 <p>Use console, or grab the IP from your router’s DHCP client list and:</p>
 
@@ -19,7 +19,7 @@
 # password "raspberry"
 </code></pre>
 
-<h3>Expand filesystem</h3>
+<h2>Expand filesystem</h2>
 
 <pre><code>sudo raspi-config --expand-rootfs
 sudo reboot
@@ -27,19 +27,19 @@ sudo reboot
 
 <p>Wait for reboot. Reconnect as above.</p>
 
-<h3>Update</h3>
+<h2>Update</h2>
 
 <pre><code>sudo apt-get -y update
 sudo apt-get -y dist-upgrade
 </code></pre>
 
-<h3>Update firmware</h3>
+<h2>Update firmware</h2>
 
 <pre><code>sudo apt-get -y install rpi-update
 sudo rpi-update
 </code></pre>
 
-<h3>Enable overclock (optional)</h3>
+<h2>Enable overclock (optional)</h2>
 
 <p>Pis seem to be relatively stable overclocked, even without a heatsink.</p>
 
@@ -52,19 +52,19 @@ sudo rpi-update
 # Select "&lt;No&gt;"
 </code></pre>
 
-<h3>Disable swap</h3>
+<h2>Disable swap</h2>
 
 <pre><code>sudo dphys-swapfile uninstall
 </code></pre>
 
-<h3>Create a new user</h3>
+<h2>Create a new user</h2>
 
 <pre><code>sudo adduser &lt;username&gt;
 # Follow prompts
 sudo usermod --append --groups sudo &lt;username&gt;
 </code></pre>
 
-<h3>SSH in as the new user</h3>
+<h2>SSH in as the new user</h2>
 
 <pre><code># ON YOUR PI
 # Find your Pi's current IP, you don't know it
@@ -82,7 +82,7 @@ scp ~/.ssh/id_ed25519.pub &lt;username&gt;@&lt;ip&gt;:.ssh/authorized_keys
 ssh &lt;username&gt;@&lt;ip&gt;
 </code></pre>
 
-<h3>Lock down sshd</h3>
+<h2>Lock down sshd</h2>
 
 <p>The SSH server has a lot of options turned on by default for compatibility with a wide range of clients. If you’re connecting only from modern machines, and you’ve gotten public key authentication working as described above (and tested it!), then you can turn off lots of the legacy options.</p>
 
@@ -121,7 +121,7 @@ END
 # Enter password for sudo
 </code></pre>
 
-<h3>Enable the hardware random number generator</h3>
+<h2>Enable the hardware random number generator</h2>
 
 <p>Note that hardware random number generators <a href="https://en.wikipedia.org/wiki/RdRand#Reception">are controversial</a>.</p>
 
@@ -130,7 +130,7 @@ echo bcm2835_rng | sudo tee --append /etc/modules
 sudo apt-get -y install rng-tools
 </code></pre>
 
-<h3>Enable the hardware watchdog</h3>
+<h2>Enable the hardware watchdog</h2>
 
 <p>This has false negatives (failures to reboot when it should) for me, but never false positives.</p>
 
@@ -140,28 +140,28 @@ watchdog-device = /dev/watchdog
 END
 </code></pre>
 
-<h3>Enable automatic updates</h3>
+<h2>Enable automatic updates</h2>
 
 <pre><code>sudo apt-get -y install unattended-upgrades
 sudo dpkg-reconfigure -plow unattended-upgrades
 # Choose "&lt;Yes&gt;"
 </code></pre>
 
-<h3>Disable avahi</h3>
+<h2>Disable avahi</h2>
 
 <p>You didn’t need mdns, did you?</p>
 
 <pre><code>sudo systemctl disable avahi-daemon.service
 </code></pre>
 
-<h3>Disable triggerhappy</h3>
+<h2>Disable triggerhappy</h2>
 
 <p>You didn’t need volume buttons, did you?</p>
 
 <pre><code>sudo systemctl disable triggerhappy.service
 </code></pre>
 
-<h3>Disable frequency scaling</h3>
+<h2>Disable frequency scaling</h2>
 
 <p>If you’re not planning to run on battery; this thing is slow enough anyway.</p>
 
@@ -171,7 +171,7 @@ GOVERNOR="performance"
 END
 </code></pre>
 
-<h3>Enable lldpd</h3>
+<h2>Enable lldpd</h2>
 
 <p>This allows you to observe network topology if you have managed switches.</p>
 
@@ -181,28 +181,28 @@ DAEMON_ARGS="-c"
 END
 </code></pre>
 
-<h3>Remove the pi user</h3>
+<h2>Remove the pi user</h2>
 
 <p>Well-known username, well-known password, no thank you.</p>
 
 <pre><code>sudo deluser pi
 </code></pre>
 
-<h3>Install busybox-syslogd</h3>
+<h2>Install busybox-syslogd</h2>
 
 <p>You give up persistent syslogs, but you reduce SD writes. You can still run “logread” to read logs since boot from RAM.</p>
 
 <pre><code>sudo apt-get -y install busybox-syslogd
 </code></pre>
 
-<h3>Reboot</h3>
+<h2>Reboot</h2>
 
 <p>Test that changes work, and have some (disabling auto-login) take effect.</p>
 
 <pre><code>sudo reboot
 </code></pre>
 
-<h3>After reboot</h3>
+<h2>After reboot</h2>
 
 <p>Note that ssh may scream “REMOTE HOST IDENTIFICATION HAS CHANGED!”; that’s a symptom of the sshd_config changes above. Just remove the line from the known_hosts file and reconnect.</p>
 

@@ -15,7 +15,7 @@
 
 <p>If you’ve got a router at the front of your network that supports static routes, though, you’ve got a conceptually simpler option: build a wireless client router. This is still a lot of moving parts and things to go wrong, but those things are going to be more debuggable when they do.</p>
 
-<h3>Shopping list</h3>
+<h2>Shopping list</h2>
 
 <ul>
 <li><a href="http://www.amazon.com/Raspberry-Pi-Model-Project-Board/dp/B00T2U7R7I">Raspberry Pi 2 Model B</a>. This probably works fine with a Pi 3; I just haven’t tested it.</li>
@@ -29,7 +29,7 @@
 
 <p><a href="https://dev.firestuff.org/firestuff/2016-03-13-raspbian-setup-notes.html">Install and configure Raspbian Lite</a>. <a href="https://wiki.archlinux.org/index.php/WPA_supplicant">Get your device connected via WiFi</a>. (Side note: the ArchLinux wiki is really great).</p>
 
-<h3>Assign a static IPv4 address</h3>
+<h2>Assign a static IPv4 address</h2>
 
 <p>Your wired side is going to need static addresses. These should be a different subnet than your existing private network. Strangely, in the new world, we configure static IPv4 addresses in /etc/dhcpcd.conf. Add a stanza that looks like:</p>
 
@@ -39,7 +39,7 @@
  noipv6rs
 </code></pre>
 
-<h3>Assign a static IPv6 address</h3>
+<h2>Assign a static IPv6 address</h2>
 
 <p>You’ll need IPv6 addresses. These are going to be hard to keep in sync with IPv6 addresses on your main network; multi-level <a href="https://en.wikipedia.org/wiki/Prefix_delegation">prefix delegation</a> does not seem to be a thing yet, though that’s likely the future. In the meantime, set up unique local addresses so you can at least talk within your network. Go <a href="https://www.ultratools.com/tools/rangeGenerator">generate a unique local address block</a> to start with. Take the first address from that network (network::1) and configure it, this time in /etc/network/interfaces:</p>
 
@@ -54,7 +54,7 @@ iface eth0 inet6 static
 
 <p>Really, don’t just use the address from this page; generate your own.</p>
 
-<h3>Enable router advertisements</h3>
+<h2>Enable router advertisements</h2>
 
 <pre><code>sudo apt-get -y install radvd
 </code></pre>
@@ -73,7 +73,7 @@ iface eth0 inet6 static
 };
 </code></pre>
 
-<h3>Enable IP forwarding</h3>
+<h2>Enable IP forwarding</h2>
 
 <p>Edit /etc/sysctl.conf and uncomment the lines:</p>
 
@@ -82,7 +82,7 @@ iface eth0 inet6 static
 net.ipv6.conf.all.forwarding=1
 </code></pre>
 
-<h3>Set up a DHCP server</h3>
+<h2>Set up a DHCP server</h2>
 
 <pre><code>sudo apt-get -y install isc-dhcp-server
 </code></pre>
@@ -102,7 +102,7 @@ subnet 10.167.0.0 netmask 255.255.0.0 {
 }
 </code></pre>
 
-<h3>Static IP and route</h3>
+<h2>Static IP and route</h2>
 
 <p>Now you need to assign a static IPv4 address to the wireless interface of the machine, and create static routes for both IPv4 and IPv6. You should do both of these in your primary router; Google for instructions. The examples below are for Cisco IOS, which is likely not very useful to you.</p>
 
@@ -115,11 +115,11 @@ ip route 10.167.0.0 255.255.0.0 10.66.0.3
 ipv6 route FD8B:CF21:31AC:69DF::/64 FD8B:CF21:31AC:A8CD:AD7F:4B19:EBD9:34CB
 </code></pre>
 
-<h3>Reboot</h3>
+<h2>Reboot</h2>
 
 <p>Reboot your RPi to pick up all these changes.</p>
 
-<h3>Caveats</h3>
+<h2>Caveats</h2>
 
 <p>Because of the lack of multi-level prefix delegation, hosts behind your new router won’t have IPv6 connectivity to the world. Fingers crossed to fix this soon.</p>
 

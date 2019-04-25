@@ -3,7 +3,7 @@
 
 <!--# include file="include/top.html" -->
 
-<h3>The Players</h3>
+<h2>The Players</h2>
 
 <p>I’ll be referring to 3 hosts:</p>
 
@@ -13,7 +13,7 @@
 <li>C: The client.</li>
 </ul>
 
-<h3>Configuring B</h3>
+<h2>Configuring B</h2>
 
 <p>Some sshd configuration needs to be done on B before any of this will work. In the sshd_config file (/etc/ssh/sshd_config on Debian):</p>
 
@@ -23,7 +23,7 @@ GatewayPorts yes
 
 <p>Remember to restart sshd after making changes (/etc/init.d/ssh restart).</p>
 
-<h3>Building the Tunnel</h3>
+<h2>Building the Tunnel</h2>
 
 <p>On A, run:</p>
 
@@ -39,7 +39,7 @@ GatewayPorts yes
 
 <p>As with all shell commands, put a “&amp;” on the end to run it in the background.</p>
 
-<h3>Tunnelling FTP</h3>
+<h2>Tunnelling FTP</h2>
 
 <p>Due to a trick in the FTP protocol, you can use this tunnelling arrangement but have FTP data connections go directly from A to C, without touching B. This only works with so-called “active” FTP (using the PORT command instead of PASV). C must also be unfirewalled for this to work.</p>
 

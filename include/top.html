@@ -4,7 +4,8 @@
 <head>
 	<meta name=viewport content="width=device-width, initial-scale=1.0">
 	<meta name=theme-color content=#000000>
-	<meta name=description content="Ian &quot;flamingcow&quot; Gulliver's external memory of technical how-to articles and other musings">
+	<meta name=description content="flamingcow's external memory of technical how-to articles and other musings">
+	<meta name=author content="Ian &quot;flamingcow&quot; Gulliver">
 	<link rel=icon href="data:image/png;base64,<!--# include file="icon-cow.png.base64" -->">
 	<style>
 	<!--# include file="style.css" -->
@@ -12,36 +13,24 @@
 	<title><!--# echo var="title" default="where the flamingcow roams" --></title>
 </head>
 
-<body class=<!--# echo var="class" -->>
+<body class="<!--# echo var="class" default="" -->">
 
 <header>
-	<h1><a href=.>where the flamingcow roams</a></h1>
+	<a href=.>where the flamingcow roams</a>
 </header>
 
 <main>
 
 <!--# if expr="$title" -->
-<script type="application/ld+json">
-{
-	"@context": "https://schema.org",
-	"@type": "BlogPosting",
-	"author": "Ian \"flamingcow\" Gulliver",
-	"headline": "<!--# echo var="title" -->",
-	"datePublished": "<!--# echo var="date" -->"
-}
-</script>
-
 <article>
 <!--# endif -->
 
 <!--# if expr="$date" -->
-<aside>
-	<h4><!--# echo var="date" --></h4>
-</aside>
+<time><!--# echo var="date" --></time>
 <!--# endif -->
 
 <!--# if expr="$title" -->
-<h2><!--# echo var="title" --></h2>
+<h1><!--# echo var="title" --></h1>
 <!--# endif -->
 
 <hr>

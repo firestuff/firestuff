@@ -13,22 +13,22 @@ Searching for reasonably-priced options, I found the [Nitrokey HSM](https://shop
 
 Below are the steps to get the Nitrokey HSM to a working state where it can generate an EC key pair, and (self-)sign a cert with it. Hopefully many of these go away in the future, as support percolates into release versions and distribution packages.
 
-### Hardware & setup
+## Hardware & setup
 
 These instructions were developed and tested on a Raspberry Pi. Base setup instructions are here. You’ll also need a Nitrokey HSM, obviously.
 
-### Install prerequisites
+## Install prerequisites
 
     sudo apt-get install pcscd libpcsclite-dev libssl-dev libreadline-dev autoconf automake build-essential docbook-xsl xsltproc libtool pkg-config git
 
-### libccid
+## libccid
 
 You’ll need a [newer version of libccid](https://www.nitrokey.com/documentation/frequently-asked-questions#which-gnupg,-opensc-and-libccid-versions-are-required) than currently exists in Raspbian Jessie (1.4.22 > 1.4.18). You can download it for your platform here, or use the commands below for an RPi.
 
     wget http://http.us.debian.org/debian/pool/main/c/ccid/libccid_1.4.22-1_armhf.deb
     sudo dpkg -i libccid_1.4.22-1_armhf.deb
 
-### Install libp11
+## Install libp11
 
 engine\_pkcs11 requires >= 0.3.1. Raspbian Jessie has 0.2.8. Debian sid [has a package](https://packages.debian.org/sid/libp11-2), but you need the dev package as well, so you might as well build it.
 
@@ -40,7 +40,7 @@ engine\_pkcs11 requires >= 0.3.1. Raspbian Jessie has 0.2.8. Debian sid [has a p
     sudo make install
     cd ..
 
-### Install engine\_pkcs11
+## Install engine\_pkcs11
 
 EC [requires engine\_pkcs11 >= 0.2.0](https://www.nitrokey.com/forum/viewtopic.php?t=1549). Raspbian Jessie has 0.1.8. Debian [sid also has a package](https://packages.debian.org/sid/libengine-pkcs11-openssl) that I haven’t tested.
 
@@ -52,7 +52,7 @@ EC [requires engine\_pkcs11 >= 0.2.0](https://www.nitrokey.com/forum/viewtopic.p
     sudo make install
     cd ..
 
-### Install OpenSC
+## Install OpenSC
 
 As of writing (2016/Mar/26), working support for the Nitrokey HSM [requires a build of OpenSC](https://www.nitrokey.com/documentation/frequently-asked-questions#which-gnupg,-opensc-and-libccid-versions-are-required) that hasn’t made it into a package yet (0.16.0). They’ve also screwed up their repository branching, so master is behind the release branch and won’t work.
 
@@ -64,21 +64,21 @@ As of writing (2016/Mar/26), working support for the Nitrokey HSM [requires a bu
     sudo make install
     cd ..
 
-### Misc
+## Misc
 
     sudo ldconfig
 
-### Initialize the device
+## Initialize the device
 
     /usr/local/bin/sc-hsm-tool --initialize
 
 If this tells you that it can’t find the device, you probably forgot to update libccid, and need to start over. You’ll need to set an SO PIN and PIN the first time. The SO PIN should be 16 characters, and the PIN 6. Both should be all digits. They can technically be hex, but some apps get confused if they see letters.
 
-### Generate a test EC key pair
+## Generate a test EC key pair
 
     /usr/local/bin/pkcs11-tool --module /usr/local/lib/opensc-pkcs11.so---login --keypairgen --key-type EC:prime256v1 --label test
 
-### Generate a self-signed cert
+## Generate a self-signed cert
 
     openssl
     OpenSSL> engine -t -pre SO_PATH:/usr/lib/arm-linux-gnueabihf/openssl-1.0.0/engines/libpkcs11.so -pre ID:pkcs11 -pre LIST_ADD:1 -pre LOAD -pre MODULE_PATH:/usr/local/lib/pkcs11/opensc-pkcs11.so dynamic

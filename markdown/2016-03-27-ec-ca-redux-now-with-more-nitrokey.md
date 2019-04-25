@@ -13,7 +13,7 @@ There’s one material difference from the other instructions: the Nitrokey HSM 
 
 XXXX is still our placeholder of choice.
 
-### Create directory structure
+## Create directory structure
 
     mkdir ca
     cd ca
@@ -23,7 +23,7 @@ XXXX is still our placeholder of choice.
     echo 1000 | tee {root,intermediate}/{serial,crlnumber}
     chmod 700 {client,server}/private
 
-### Create openssl.cnf
+## Create openssl.cnf
 
     cat > openssl.cnf <<'END'
     openssl_conf = openssl_init
@@ -140,24 +140,24 @@ XXXX is still our placeholder of choice.
     init          = 0
     END
     
-### Tell future commands to use your new conf file
+## Tell future commands to use your new conf file
 
     export OPENSSL_CONF=openssl.cnf
 
-### Create a root key
+## Create a root key
 
 Insert your root HSM.
 
     /usr/local/bin/pkcs11-tool --module /usr/local/lib/opensc-pkcs11.so --login --keypairgen --key-type EC:prime256v1 --label root
     # Enter PIN
 
-### Create a self-signed root cert
+## Create a self-signed root cert
 
     openssl req -engine pkcs11 -keyform engine -key label_root -new -extensions ext_root -out root/certs/root.cert.pem -x509 -subj '/C=US/ST=California/O=XXXX/OU=XXXX Certificate Authority/CN=XXXX Root CA' -days 7300
     # Enter PIN
     chmod 444 root/certs/root.cert.pem
 
-### Verify root cert
+## Verify root cert
 
     openssl x509 -noout -text -in root/certs/root.cert.pem
 
@@ -168,25 +168,25 @@ Check:
 * Public key size (256 bit)
 * CA:TRUE
 
-### Import root cert onto HSM
+## Import root cert onto HSM
 
     openssl x509 -in root/certs/root.cert.pem -out root/certs/root.cert.der -outform der
     /usr/local/bin/pkcs11-tool --module /usr/local/lib/opensc-pkcs11.so --login --write-object root/certs/root.cert.der --type cert --label root
     # Enter PIN
 
-### Create an intermediate key
+## Create an intermediate key
 
 Insert your intermediate HSM
 
     /usr/local/bin/pkcs11-tool --module /usr/local/lib/opensc-pkcs11.so --login --keypairgen --key-type EC:prime256v1 --label intermediate
     # Enter PIN
 
-### Create an intermediate certificate signing request (CSR)
+## Create an intermediate certificate signing request (CSR)
 
     openssl req -engine pkcs11 -keyform engine -new -key label_intermediate -out intermediate/csr/intermediate.csr.pem  -subj '/C=US/ST=California/O=XXXX/OU=XXXX Certificate Authority/CN=XXXX Intermediate'
     # Enter PIN
 
-### Sign intermediate cert with root key
+## Sign intermediate cert with root key
 
 Insert your root HSM
 
@@ -194,7 +194,7 @@ Insert your root HSM
     # Enter PIN
     chmod 444 intermediate/certs/intermediate.cert.pem
 
-### Verify intermediate cert
+## Verify intermediate cert
 
     openssl x509 -noout -text -in intermediate/certs/intermediate.cert.pem
     openssl verify -CAfile root/certs/root.cert.pem intermediate/certs/intermediate.cert.pem
@@ -207,7 +207,7 @@ Check:
 * CA:TRUE
 * OK
 
-### Import root & intermediate certs onto HSM
+## Import root & intermediate certs onto HSM
 
 Insert your intermediate HSM
 
@@ -217,18 +217,18 @@ Insert your intermediate HSM
     /usr/local/bin/pkcs11-tool --module /usr/local/lib/opensc-pkcs11.so --login --write-object intermediate/certs/intermediate.cert.der --type cert --label intermediate
     # Enter PIN
 
-### Create a chain certificate file
+## Create a chain certificate file
 
     cat intermediate/certs/intermediate.cert.pem root/certs/root.cert.pem > intermediate/certs/chain.cert.pem
     chmod 444 intermediate/certs/chain.cert.pem
 
-### CA setup done!
+## CA setup done!
 
 Take your root HSM, if you have a separate one, and lock it in a safe somewhere; you won’t need it for regular use.
 
 The following steps are examples of how to use your new CA.
 
-### Create a client key
+## Create a client key
 
 You can substitute “server” for “client” for a server cert.
 
@@ -236,17 +236,17 @@ You can substitute “server” for “client” for a server cert.
     # Create client key password
     chmod 400 client/private/test1.key.pem
 
-### Create a client certificate signing request (CSR)
+## Create a client certificate signing request (CSR)
 
     openssl req -new -key client/private/test1.key.pem -out client/csr/test1.csr.pem  -subj '/C=US/ST=California/O=XXXX/OU=XXXX Test/CN=XXXX Test 1'
 
-### Sign client cert with intermediate key
+## Sign client cert with intermediate key
 
     openssl ca -engine pkcs11 -keyform engine -extensions ext_client -notext -in client/csr/test1.csr.pem -out client/certs/test1.cert.pem
     # Enter PIN
     chmod 444 client/certs/test1.cert.pem
 
-### Verify client cert
+## Verify client cert
 
     openssl x509 -noout -text -in client/certs/test1.cert.pem
     openssl verify -CAfile intermediate/certs/chain.cert.pem client/certs/test1.cert.pem
@@ -259,20 +259,20 @@ Check:
 * CA:FALSE
 * OK
 
-### Create a PKCS#12 bundle for the client
+## Create a PKCS#12 bundle for the client
 
 This is an easy(er) way to get all the necessary keys & certs to the client in one package.
 
     openssl pkcs12 -export -out client/pfx/test1.pfx -inkey client/private/test1.key.pem -in client/certs/test1.cert.pem -certfile intermediate/certs/chain.cert.pem
     # Enter both the client key password, and a new password for the export; you'll need to give the latter to the client
 
-### Generate a certificate revocation list (CRL)
+## Generate a certificate revocation list (CRL)
 
 Initially empty. You can also do this for your root CA (with its HSM inserted).
 
     openssl ca -engine pkcs11 -keyform engine -gencrl -out intermediate/crl/intermediate.crl.pem
 
-### Verify certificate revocation list
+## Verify certificate revocation list
 
     openssl crl -in intermediate/crl/intermediate.crl.pem -noout -text
 
@@ -281,7 +281,7 @@ Check:
 * Expiration date (30 days in future)
 * Signature algorithm (ecdsa-with-SHA256)
 
-### Revoke a certificate
+## Revoke a certificate
 
 Only do this if you need to. Find the certificate:
 

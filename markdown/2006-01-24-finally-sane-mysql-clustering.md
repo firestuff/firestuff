@@ -42,7 +42,7 @@ On A:
 
 	SHOW DATABASES;
 
-### The AUTO\_INCREMENT problem
+## The AUTO\_INCREMENT problem
 
 AUTO\_INCREMENT-type columns get used in just about every MySQL table. They’re a quick way to build primary keys without thinking. However, there are obvious problems in a multi-master setup (if inserts happen on both servers at the same time, they’ll both get the same ID). The official MySQL solution (start the IDs on both servers at numbers significantly different from each other) is a nasty hack.
 

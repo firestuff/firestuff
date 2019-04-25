@@ -5,7 +5,7 @@
 
 Notes from setting up a two-level (root and intermediate) CA using EC certs, combined from two decent sets of instructions [here](https://jamielinux.com/docs/openssl-certificate-authority/introduction.html) and [here](https://wiki.openssl.org/index.php/Command_Line_Elliptic_Curve_Operations). This is the CliffsNotes version; see those two docs for more detail. XXXX is used as a placeholder here; search for it and replace.
 
-### Create directory structure
+## Create directory structure
 
     mkdir ca
     cd ca
@@ -132,19 +132,19 @@ Notes from setting up a two-level (root and intermediate) CA using EC certs, com
     extendedKeyUsage        = critical, OCSPSigning
     END
 
-### Create a root key
+## Create a root key
 
     openssl ecparam -name secp384r1 -genkey | openssl ec -aes-256-cbc -out root/private/root.key.pem
     # Create strong root key password
     chmod 400 root/private/root.key.pem
 
-### Create a self-signed root cert
+## Create a self-signed root cert
 
     openssl req -config openssl.cnf -key root/private/root.key.pem -new -extensions ext_root -out root/certs/root.cert.pem -x509 -subj '/C=US/ST=California/O=XXXX/OU=XXXX Certificate Authority/CN=XXXX Root CA' -days 7300
     # Enter root key password
     chmod 444 root/certs/root.cert.pem
 
-### Verify root cert
+## Verify root cert
 
     openssl x509 -noout -text -in root/certs/root.cert.pem
 
@@ -155,24 +155,24 @@ Check:
 * Public key size (384 bit)
 * CA:TRUE
 
-### Create an intermediate key
+## Create an intermediate key
 
     openssl ecparam -name secp384r1 -genkey | openssl ec -aes-256-cbc -out intermediate/private/intermediate.key.pem
     # Create strong intermediate key password
     chmod 400 intermediate/private/intermediate.key.pem
 
-### Create an intermediate certificate signing request (CSR)
+## Create an intermediate certificate signing request (CSR)
 
     openssl req -config openssl.cnf -new -key intermediate/private/intermediate.key.pem -out intermediate/csr/intermediate.csr.pem  -subj '/C=US/ST=California/O=XXXX/OU=XXXX Certificate Authority/CN=XXXX Intermediate'
     # Enter intermediate key password
 
-### Sign intermediate cert with root key
+## Sign intermediate cert with root key
 
     openssl ca -config openssl.cnf -name ca_root -extensions ext_intermediate -notext -in intermediate/csr/intermediate.csr.pem -out intermediate/certs/intermediate.cert.pem
     # Enter root key password
     chmod 444 intermediate/certs/intermediate.cert.pem
 
-### Verify intermediate cert
+## Verify intermediate cert
 
     openssl x509 -noout -text -in intermediate/certs/intermediate.cert.pem
     openssl verify -CAfile root/certs/root.cert.pem intermediate/certs/intermediate.cert.pem
@@ -185,12 +185,12 @@ Check:
 * CA:TRUE
 * OK
 
-### Create a chain certificate file
+## Create a chain certificate file
 
     cat intermediate/certs/intermediate.cert.pem root/certs/root.cert.pem > intermediate/certs/chain.cert.pem
     chmod 444 intermediate/certs/chain.cert.pem
 
-### Create a client key
+## Create a client key
 
 You can substitute “server” for “client” for a server cert.
 
@@ -198,17 +198,17 @@ You can substitute “server” for “client” for a server cert.
     # Create client key password
     chmod 400 client/private/test1.key.pem
 
-### Create a client certificate signing request (CSR)
+## Create a client certificate signing request (CSR)
 
     openssl req -config openssl.cnf -new -key client/private/test1.key.pem -out client/csr/test1.csr.pem  -subj '/C=US/ST=California/O=XXXX/OU=XXXX Test/CN=XXXX Test 1'
 
-### Sign client cert with intermediate key
+## Sign client cert with intermediate key
 
     openssl ca -config openssl.cnf -extensions ext_client -notext -in client/csr/test1.csr.pem -out client/certs/test1.cert.pem
     # Enter intermediate key password
     chmod 444 client/certs/test1.cert.pem
 
-### Verify client cert
+## Verify client cert
 
     openssl x509 -noout -text -in client/certs/test1.cert.pem
     openssl verify -CAfile intermediate/certs/chain.cert.pem client/certs/test1.cert.pem
@@ -221,20 +221,20 @@ Check:
 * CA:FALSE
 * OK
 
-### Create a PKCS#12 bundle for the client
+## Create a PKCS#12 bundle for the client
 
 This is an easy(er) way to get all the necessary keys & certs to the client in one package.
 
     openssl pkcs12 -export -out client/pfx/test1.pfx -inkey client/private/test1.key.pem -in client/certs/test1.cert.pem -certfile intermediate/certs/chain.cert.pem
     # Enter both the client key password, and a new password for the export; you'll need to give the latter to the client
 
-### Generate a certificate revocation list (CRL)
+## Generate a certificate revocation list (CRL)
 
 Initially empty. You can also do this for your root CA.
 
     openssl ca -config openssl.cnf -gencrl -out intermediate/crl/intermediate.crl.pem
 
-### Verify certificate revocation list
+## Verify certificate revocation list
 
     openssl crl -in intermediate/crl/intermediate.crl.pem -noout -text
 
@@ -243,7 +243,7 @@ Check:
 * Expiration date (30 days in future)
 * Signature algorithm (ecdsa-with-SHA256)
 
-### Revoke a certificate
+## Revoke a certificate
 
 Only do this if you need to. Find the certificate:
 

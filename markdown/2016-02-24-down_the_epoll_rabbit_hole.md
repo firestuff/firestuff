@@ -7,7 +7,7 @@ This is an in-depth dive into the actual observed behavior and interaction of ep
 
 I’ll be showing observed behavior through strace and tcpdump output.
 
-### Setup
+## Setup
 
 Our test environment starts with two sockets connected to each other. There’s also a listening socket, only used to accept the initial connection, and an epoll fd. Both of the connected sockets are added to the epoll watch set, with most possible level-triggered flags enabled.
 
@@ -37,7 +37,7 @@ On the wire, this is just a typical 3-way handshake:
 
 We now have two file descriptors, 5 and 6, that are opposite ends of the same TCP connection. They’re both in the epoll set of epoll file descriptor 3. They’re both signaling writability (EPOLLOUT), and nothing else. All is as expected.
 
-### shutdown(SHUT\_RD)
+## shutdown(SHUT\_RD)
 
 Now let’s call shutdown(5, SHUT\_RD).
 
@@ -64,7 +64,7 @@ However, this doesn’t do anything on the wire. That means that the other side 
 
 Side note: notice that close(5) causes automatic removal of that socket from the epoll set. This is handy, but see dup() below.
 
-### shutdown(SHUT\_WR)
+## shutdown(SHUT\_WR)
 
 Let’s rewind and test with SHUT\_WR (write).
 
@@ -97,7 +97,7 @@ After shutdown(5, SHUT\_WR), fd 5 returns EPIPE and generates SIGPIPE if you wri
 
 The only oddity here is that calling close(5) doesn’t change any of the epoll status flags for fd 6. Once you attempt to write to fd 6, however, every flag on the planet starts firing, including EPOLLERR and EPOLLHUP.
 
-### dup()
+## dup()
 
 Rewinding to our setup state again, let’s look at dup().
 
@@ -126,7 +126,7 @@ dup(5) gives us the new fd 7. We add it to the set, and all looks normal. We wri
 
 Here’s crazy town, though. close(5) doesn’t remove it from the epoll set. epoll is waiting for the underlying socket to close, and fd 7’s existence is keeping it alive. Trying to remove fd 5 from the epoll set also fails. The only way to get rid of it seems to be to close(7), which removes both from the set and causes fd 6 to signal EPOLLIN and EPOLLRDHUP.
 
-### shutdown(SHUT\_RD) + dup()
+## shutdown(SHUT\_RD) + dup()
 
 	dup(5)                                  = 7
 	epoll_ctl(3, EPOLL_CTL_ADD, 7, {EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP|EPOLLRDHUP, {u32=7, u64=7}}) = 0
@@ -138,7 +138,7 @@ Nothing extra traverses the wire.
 
 The takeaway here is that shutdown() operates on the underlying socket endpoint, not the file descriptor. Calling shutdown(7, SHUT\_RD) causes both fd 5 and 7 to signal EPOLLIN and EPOLLRDHUP.
 
-### shutdown(SHUT\_WR) + dup()
+## shutdown(SHUT\_WR) + dup()
 
 	dup(5)                                  = 7
 	epoll_ctl(3, EPOLL_CTL_ADD, 7, {EPOLLIN|EPOLLOUT|EPOLLERR|EPOLLHUP|EPOLLRDHUP, {u32=7, u64=7}}) = 0
@@ -153,7 +153,7 @@ The takeaway here is that shutdown() operates on the underlying socket endpoint,
 
 As expected, shutdown(7, SHUT\_WR) causes fd 6 to signal EPOLLIN and EPOLLRDHUP.
 
-### Conclusions
+## Conclusions
 
 * If you’re using dup() and epoll, you need to call epoll\_ctl(EPOLL\_CTL\_DEL) before calling close(). It’s hard to imagine getting sane behavior any other way. If you never use dup(), you can just call close().
 * If you’re using dup() and epoll and want to signal all fds on a socket to close, you can call shutdown(SHUT\_RD) before calling close(), causing EPOLLRDHUP to signal for other fds attached to the same socket.

@@ -13,7 +13,7 @@ Your access point, however, does require support for this to work. It needs to:
 * Allow frames where the ethernet and WLAN source MAC addresses differ (like above, but a policy decision).
 * Not assume that the WLAN MAC address is the only MAC at the other end of the link. This assumption is frequently used to reduce the effect of broadcast traffic in a WiFi environment by filtering. There may be settings like “Multicast optimization”, “Broadcast optimization”, or “DHCP optimization” that you need to turn off.
 
-### Bridging
+## Bridging
 
 Linux supports bridging. There’s a bridge-utils package in Ubuntu with the tools you need:
 
@@ -30,7 +30,7 @@ However, you can’t normally add a WiFi interface to a bridge:
 
 Googling this error produces a wide range of well-meaning yet completely unhelpful results.
 
-### Enable 4 address mode
+## Enable 4 address mode
 
 To be able to add a WiFi interface to a bridge, you have to put it into 4-address mode first:
 
@@ -46,7 +46,7 @@ Now add the interface to a bridge:
 
 You should now be able to fetch an IP on br0 via DHCP. Unless, of course, you need wpa\_supplicant to work…
 
-### wpa\_supplicant
+## wpa\_supplicant
 
 wpa\_supplicant needs to be bridge-aware to work with 4-address mode. Fortunately, it has a flag (-b) to set the bridge interface. Unfortunately, this flag is broken in 2.1, the version in Ubuntu Trusty. I verified that it works in wpa\_supplicant 2.5 built from source; I haven’t verified 2.4 from Xenial.
 
@@ -56,7 +56,7 @@ A wpa\_supplicant commandline looks something like:
 
 With that working, the interface should get to wpa\_state=COMPLETED, and br0 should work normally. Remember that wlan0 will still be unusable directly.
 
-### Ordering
+## Ordering
 
 Bringing up these interfaces is tricky; the ordering is annoying.
 
@@ -64,7 +64,7 @@ Bringing up these interfaces is tricky; the ordering is annoying.
 * br0 must exist before you can start wpa\_supplicant
 * wpa\_supplicant must be running before you can get an IP address on br0
 
-### Putting it together
+## Putting it together
 
 Because of the ordering issues, it’s easier to treat this all as one interface that has to come up together. Here’s an example interface stanza that does this:
 

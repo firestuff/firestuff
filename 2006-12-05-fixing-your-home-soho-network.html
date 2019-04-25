@@ -5,7 +5,7 @@
 
 <p>This post is going to stray a bit from my usual geeky fare. I’m being asking far too much to help sort out haphazard home network designs that are causing real problems for their users. I decided to collect all the answers that I’ve given together in a single place that I can point to when asked.</p>
 
-<h3>General Principles</h3>
+<h2>General Principles</h2>
 
 <p>Simplicity</p>
 
@@ -19,7 +19,7 @@
   <p>A Cisco Aironet is going to crash less than a Linksys access point. A Cisco switch is going to provide better throughput than a NetGear one. This isn’t a hard-and-fast rule; there are certainly decent, cheap network devices out there. However, generally, if a device has a plastic case and an external power supply and you’ve got more than 3 people depending on it, you’re going to regret the decision.</p>
 </blockquote>
 
-<h3>Sorting out the devices</h3>
+<h2>Sorting out the devices</h2>
 
 <ol>
 <li>Diagram your network. Knowing what you have and how it’s all connected together is a critical first step toward fixing any of it. A complete diagram looks like:<br>
@@ -38,7 +38,7 @@ sudo dhclient eth0
 <p>You should see one or more lines starting with DHCPOFFER and telling you where the offer came from. If you see more than one source of offers, you need to eliminate extra DHCP servers.</p></li>
 </ol>
 
-<h3>Troubleshooting slowness</h3>
+<h2>Troubleshooting slowness</h2>
 
 <p>By far the most common network issue seems to be nebulous “slowness”. We’ll try to eliminate possibilities one by one.</p>
 
@@ -68,11 +68,11 @@ sudo dhclient eth0
 <p>You’ll want to make the window a bit bigger. This application gives you real time timing data following the route from your network to firestuff.org. Watch the average times and loss percentages. Nothing above 0% is really acceptable loss; your ISP will probably claim that it is, but they’re lying. Remember that the numbers are cumulative; if hop 3 is dropping packets, those drops will effect hop 3 and everything beyond it. However, it’s really hop 3’s problem, and if hop 6 has a problem, it’ll be hard to see until you get the closer issue cleared up.</p></li>
 </ol>
 
-<h3>Troubleshooting idle disconnects</h3>
+<h2>Troubleshooting idle disconnects</h2>
 
 <p>Do you have long-running connections (SSH, telnet, MySQL, etc.) that get disconnected when they’re not doing anything? It’s your NAT device’s fault. Period. If it doesn’t have a setting to change the maximum idle time for a connection, throw it out and buy one that does.</p>
 
-<h3>Troubleshooting wireless problems</h3>
+<h2>Troubleshooting wireless problems</h2>
 
 <ol>
 <li>Does rebooting your wireless router/access point fix it? Throw it out and buy a real one (I kept buying new Linksys/NetGear products until I gave up and started buying Cisco. Oddly, since then, things work).</li>
