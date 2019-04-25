@@ -47,3 +47,5 @@ __THESE ARE ENTIRELY OBSOLETE AND ONLY OF HISTORICAL INTEREST__
 * sqlsearch (MySQL full text search using triggers and stored procedures)
   * [1.0.0](files/sqlsearch-1.0.0.tar.bz2)
   * [1.1.0](files/sqlsearch-1.1.0.tar.bz2)
+
+<!--# include file="include/bottom.html" -->
