@@ -1,5 +1,5 @@
 <!--# set var="title" value="Home video re-think" -->
-<!--# set var="date" value="April 10, 2010" -->
+<!--# set var="date" value="2010-04-10" -->
 
 <!--# include file="include/top.html" -->
 

@@ -1,5 +1,5 @@
 <!--# set var="title" value="Converting subselects to joins" -->
-<!--# set var="date" value="July 12, 2011" -->
+<!--# set var="date" value="2011-07-12" -->
 
 <!--# include file="include/top.html" -->
 

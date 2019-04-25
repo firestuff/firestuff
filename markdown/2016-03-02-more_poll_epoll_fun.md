@@ -1,5 +1,5 @@
 <!--# set var="title" value="More poll()/epoll fun" -->
-<!--# set var="date" value="March 2, 2016" -->
+<!--# set var="date" value="2016-03-02" -->
 
 <!--# include file="include/top.html" -->
 

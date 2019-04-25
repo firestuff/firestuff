@@ -1,5 +1,5 @@
 <!--# set var="title" value="Is sleep(3) effected by time changes?" -->
-<!--# set var="date" value="February 13, 2006" -->
+<!--# set var="date" value="2006-02-13" -->
 
 <!--# include file="include/top.html" -->
 

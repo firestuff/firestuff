@@ -1,5 +1,5 @@
 <!--# set var="title" value="HP Switch Revisited" -->
-<!--# set var="date" value="June 16, 2006" -->
+<!--# set var="date" value="2006-06-16" -->
 
 <!--# include file="include/top.html" -->
 

@@ -1,5 +1,5 @@
 <!--# set var="title" value="Carrying Servers" -->
-<!--# set var="date" value="June 30, 2006" -->
+<!--# set var="date" value="2006-06-30" -->
 
 <!--# include file="include/top.html" -->
 

@@ -1,5 +1,5 @@
 <!--# set var="title" value="SSH Tunnelling 101" -->
-<!--# set var="date" value="January 23, 2006" -->
+<!--# set var="date" value="2006-01-23" -->
 
 <!--# include file="include/top.html" -->
 

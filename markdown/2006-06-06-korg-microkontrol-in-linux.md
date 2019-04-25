@@ -1,5 +1,5 @@
 <!--# set var="title" value="KORG MicroKontrol in Linux" -->
-<!--# set var="date" value="June 6, 2006" -->
+<!--# set var="date" value="2006-06-06" -->
 
 <!--# include file="include/top.html" -->
 

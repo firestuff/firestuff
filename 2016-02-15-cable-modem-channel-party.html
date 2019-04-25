@@ -1,5 +1,5 @@
 <!--# set var="title" value="Cable modem channel party" -->
-<!--# set var="date" value="February 15, 2016" -->
+<!--# set var="date" value="2016-02-15" -->
 
 <!--# include file="include/top.html" -->
 

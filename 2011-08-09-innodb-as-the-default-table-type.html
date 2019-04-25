@@ -1,5 +1,5 @@
 <!--# set var="title" value="InnoDB as the default table type" -->
-<!--# set var="date" value="August 9, 2011" -->
+<!--# set var="date" value="2011-08-09" -->
 
 <!--# include file="include/top.html" -->
 

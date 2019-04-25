@@ -1,5 +1,5 @@
 <!--# set var="title" value="Database best practices for future scalability" -->
-<!--# set var="date" value="August 8, 2011" -->
+<!--# set var="date" value="2011-08-08" -->
 
 <!--# include file="include/top.html" -->
 

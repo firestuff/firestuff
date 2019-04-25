@@ -1,5 +1,5 @@
 <!--# set var="title" value="Asynchronous name resolution in C" -->
-<!--# set var="date" value="March 1, 2016" -->
+<!--# set var="date" value="2016-03-01" -->
 
 <!--# include file="include/top.html" -->
 

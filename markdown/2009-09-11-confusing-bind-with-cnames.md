@@ -1,5 +1,5 @@
 <!--# set var="title" value="Confusing BIND with CNAMEs" -->
-<!--# set var="date" value="September 11, 2009" -->
+<!--# set var="date" value="2009-09-11" -->
 
 <!--# include file="include/top.html" -->
 

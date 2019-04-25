@@ -1,5 +1,5 @@
 <!--# set var="title" value="Old code roundup" -->
-<!--# set var="date" value="April 21, 2019" -->
+<!--# set var="date" value="2019-04-21" -->
 
 <!--# include file="include/top.html" -->
 

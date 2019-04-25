@@ -1,5 +1,5 @@
 <!--# set var="title" value="Fixing your home/SOHO network" -->
-<!--# set var="date" value="December 5, 2006" -->
+<!--# set var="date" value="2006-12-05" -->
 
 <!--# include file="include/top.html" -->
 

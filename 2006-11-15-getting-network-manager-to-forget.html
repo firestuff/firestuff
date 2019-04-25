@@ -1,5 +1,5 @@
 <!--# set var="title" value="Getting network-manager to forget" -->
-<!--# set var="date" value="November 15, 2006" -->
+<!--# set var="date" value="2006-11-15" -->
 
 <!--# include file="include/top.html" -->
 

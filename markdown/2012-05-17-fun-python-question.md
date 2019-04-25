@@ -1,5 +1,5 @@
 <!--# set var="title" value="Fun Python question" -->
-<!--# set var="date" value="May 17, 2012" -->
+<!--# set var="date" value="2012-05-17" -->
 
 <!--# include file="include/top.html" -->
 

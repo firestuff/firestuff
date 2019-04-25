@@ -1,5 +1,5 @@
 <!--# set var="title" value="SSH agent forwarding & screen" -->
-<!--# set var="date" value="February 28, 2016" -->
+<!--# set var="date" value="2016-02-28" -->
 
 <!--# include file="include/top.html" -->
 

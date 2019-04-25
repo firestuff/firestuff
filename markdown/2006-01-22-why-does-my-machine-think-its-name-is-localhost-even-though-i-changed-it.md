@@ -1,5 +1,5 @@
 <!--# set var="title" value="Why does my machine think its name is localhost even though I changed it?" -->
-<!--# set var="date" value="January 22, 2006" -->
+<!--# set var="date" value="2006-01-22" -->
 
 <!--# include file="include/top.html" -->
 

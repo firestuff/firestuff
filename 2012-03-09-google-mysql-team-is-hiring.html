@@ -1,5 +1,5 @@
 <!--# set var="title" value="Google MySQL team is hiring" -->
-<!--# set var="date" value="March 9, 2012" -->
+<!--# set var="date" value="2012-03-09" -->
 
 <!--# include file="include/top.html" -->
 

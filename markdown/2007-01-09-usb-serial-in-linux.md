@@ -1,5 +1,5 @@
 <!--# set var="title" value="USB/Serial in Linux" -->
-<!--# set var="date" value="January 9, 2007" -->
+<!--# set var="date" value="2007-01-09" -->
 
 <!--# include file="include/top.html" -->
 

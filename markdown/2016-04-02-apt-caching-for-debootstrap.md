@@ -1,5 +1,5 @@
 <!--# set var="title" value="apt caching for debootstrap" -->
-<!--# set var="date" value="April 2, 2016" -->
+<!--# set var="date" value="2016-04-02" -->
 
 <!--# include file="include/top.html" -->
 

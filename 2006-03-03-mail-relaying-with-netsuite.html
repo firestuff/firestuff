@@ -1,5 +1,5 @@
 <!--# set var="title" value="Mail relaying with NetSuite" -->
-<!--# set var="date" value="March 3, 2006" -->
+<!--# set var="date" value="2006-03-03" -->
 
 <!--# include file="include/top.html" -->
 

@@ -1,5 +1,5 @@
 <!--# set var="title" value="Avoid MySQL round trips" -->
-<!--# set var="date" value="April 22, 2011" -->
+<!--# set var="date" value="2011-04-22" -->
 
 <!--# include file="include/top.html" -->
 

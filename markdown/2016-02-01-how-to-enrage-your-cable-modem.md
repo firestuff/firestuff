@@ -1,5 +1,5 @@
 <!--# set var="title" value="How to enrage your cable modem" -->
-<!--# set var="date" value="February 1, 2016" -->
+<!--# set var="date" value="2016-02-01" -->
 
 <!--# include file="include/top.html" -->
 

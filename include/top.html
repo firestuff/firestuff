@@ -21,6 +21,16 @@
 <main>
 
 <!--# if expr="$title" -->
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "BlogPosting",
+	"author": "Ian \"flamingcow\" Gulliver",
+	"headline": "<!--# echo var="title" -->",
+	"datePublished": "<!--# echo var="date" -->"
+}
+</script>
+
 <article>
 <!--# endif -->
 

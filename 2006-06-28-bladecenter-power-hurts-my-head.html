@@ -1,5 +1,5 @@
 <!--# set var="title" value="BladeCenter power hurts my head" -->
-<!--# set var="date" value="June 28, 2006" -->
+<!--# set var="date" value="2006-06-28" -->
 
 <!--# include file="include/top.html" -->
 

@@ -1,5 +1,5 @@
 <!--# set var="title" value="EC CA redux: now with more Nitrokey" -->
-<!--# set var="date" value="March 27, 2016" -->
+<!--# set var="date" value="2016-03-27" -->
 
 <!--# include file="include/top.html" -->
 

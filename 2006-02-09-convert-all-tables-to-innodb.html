@@ -1,5 +1,5 @@
 <!--# set var="title" value="Convert all tables to InnoDB" -->
-<!--# set var="date" value="February 9, 2006" -->
+<!--# set var="date" value="2006-02-09" -->
 
 <!--# include file="include/top.html" -->
 

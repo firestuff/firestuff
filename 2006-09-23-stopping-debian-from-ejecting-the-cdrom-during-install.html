@@ -1,5 +1,5 @@
 <!--# set var="title" value="Stopping Debian from ejecting the CD-ROM during install" -->
-<!--# set var="date" value="September 23, 2006" -->
+<!--# set var="date" value="2006-09-23" -->
 
 <!--# include file="include/top.html" -->
 

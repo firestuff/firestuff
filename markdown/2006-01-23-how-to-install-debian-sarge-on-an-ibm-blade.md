@@ -1,5 +1,5 @@
 <!--# set var="title" value="How to install Debian Sarge on an IBM Blade" -->
-<!--# set var="date" value="January 23, 2006" -->
+<!--# set var="date" value="2006-01-23" -->
 
 <!--# include file="include/top.html" -->
 

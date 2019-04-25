@@ -1,5 +1,5 @@
 <!--# set var="title" value="X got jumpy during my Dapper -> Edgy upgrade" -->
-<!--# set var="date" value="October 30, 2006" -->
+<!--# set var="date" value="2006-10-30" -->
 
 <!--# include file="include/top.html" -->
 

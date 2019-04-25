@@ -1,5 +1,5 @@
 <!--# set var="title" value="CD-ROM multi-drive sarge installation" -->
-<!--# set var="date" value="September 22, 2006" -->
+<!--# set var="date" value="2006-09-22" -->
 
 <!--# include file="include/top.html" -->
 

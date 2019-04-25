@@ -1,5 +1,5 @@
 <!--# set var="title" value="Net Neutrality?" -->
-<!--# set var="date" value="August 22, 2010" -->
+<!--# set var="date" value="2010-08-22" -->
 
 <!--# include file="include/top.html" -->
 

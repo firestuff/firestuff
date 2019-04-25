@@ -1,5 +1,5 @@
 <!--# set var="title" value="Elliptic Curve Certificate Authority" -->
-<!--# set var="date" value="March 21, 2016" -->
+<!--# set var="date" value="2016-03-21" -->
 
 <!--# include file="include/top.html" -->
 

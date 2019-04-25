@@ -1,5 +1,5 @@
 <!--# set var="title" value="HP ProCurve 2824 Mini-Review" -->
-<!--# set var="date" value="March 21, 2006" -->
+<!--# set var="date" value="2006-03-21" -->
 
 <!--# include file="include/top.html" -->
 

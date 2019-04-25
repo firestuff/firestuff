@@ -1,5 +1,5 @@
 <!--# set var="title" value="MySQL base64 functions" -->
-<!--# set var="date" value="March 15, 2006" -->
+<!--# set var="date" value="2006-03-15" -->
 
 <!--# include file="include/top.html" -->
 

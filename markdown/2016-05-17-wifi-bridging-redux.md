@@ -1,5 +1,5 @@
 <!--# set var="title" value="WiFi bridging redux" -->
-<!--# set var="date" value="May 17, 2016" -->
+<!--# set var="date" value="2016-05-17" -->
 
 <!--# include file="include/top.html" -->
 

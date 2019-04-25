@@ -1,5 +1,5 @@
 <!--# set var="title" value="The dangers of max_connections" -->
-<!--# set var="date" value="December 9, 2011" -->
+<!--# set var="date" value="2011-12-09" -->
 
 <!--# include file="include/top.html" -->
 

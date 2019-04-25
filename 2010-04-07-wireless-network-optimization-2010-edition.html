@@ -1,5 +1,5 @@
 <!--# set var="title" value="(Wireless) network optimization, 2010 edition" -->
-<!--# set var="date" value="April 7, 2010" -->
+<!--# set var="date" value="2010-04-07" -->
 
 <!--# include file="include/top.html" -->
 

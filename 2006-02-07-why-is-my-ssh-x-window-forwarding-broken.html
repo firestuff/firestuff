@@ -1,5 +1,5 @@
 <!--# set var="title" value="Why is my SSH X Window forwarding broken?" -->
-<!--# set var="date" value="February 7, 2006" -->
+<!--# set var="date" value="2006-02-07" -->
 
 <!--# include file="include/top.html" -->
 

@@ -1,5 +1,5 @@
 <!--# set var="title" value="Down the epoll rabbit hole" -->
-<!--# set var="date" value="February 24, 2016" -->
+<!--# set var="date" value="2016-02-24" -->
 
 <!--# include file="include/top.html" -->
 

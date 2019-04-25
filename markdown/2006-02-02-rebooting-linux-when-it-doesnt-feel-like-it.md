@@ -1,5 +1,5 @@
-<!--# set var="title" value="Rebooting Linux when it doesn’t feel like it" -->
-<!--# set var="date" value="February 2, 2006" -->
+<!--# set var="title" value="Rebooting Linux when it doesn't feel like it" -->
+<!--# set var="date" value="2006-02-02" -->
 
 <!--# include file="include/top.html" -->
 

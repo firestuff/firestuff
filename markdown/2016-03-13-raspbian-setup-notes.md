@@ -1,5 +1,5 @@
 <!--# set var="title" value="Raspbian setup notes" -->
-<!--# set var="date" value="March 13, 2016" -->
+<!--# set var="date" value="2016-03-13" -->
 
 <!--# include file="include/top.html" -->
 

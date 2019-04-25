@@ -1,5 +1,5 @@
 <!--# set var="title" value="Karaoke project" -->
-<!--# set var="date" value="March 9, 2010" -->
+<!--# set var="date" value="2010-03-09" -->
 
 <!--# include file="include/top.html" -->
 

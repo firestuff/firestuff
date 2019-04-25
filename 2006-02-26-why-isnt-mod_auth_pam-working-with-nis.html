@@ -1,5 +1,5 @@
 <!--# set var="title" value="Why isn’t mod_auth_pam working with NIS?" -->
-<!--# set var="date" value="February 26, 2006" -->
+<!--# set var="date" value="2006-02-26" -->
 
 <!--# include file="include/top.html" -->
 

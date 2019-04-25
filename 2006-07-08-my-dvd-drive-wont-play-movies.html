@@ -1,5 +1,5 @@
 <!--# set var="title" value="My DVD drive won’t play movies" -->
-<!--# set var="date" value="July 8, 2006" -->
+<!--# set var="date" value="2006-07-08" -->
 
 <!--# include file="include/top.html" -->
 

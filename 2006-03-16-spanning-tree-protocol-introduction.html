@@ -1,5 +1,5 @@
 <!--# set var="title" value="Spanning Tree Protocol Introduction" -->
-<!--# set var="date" value="March 16, 2006" -->
+<!--# set var="date" value="2006-03-16" -->
 
 <!--# include file="include/top.html" -->
 

@@ -1,5 +1,5 @@
 <!--# set var="title" value="Finally, sane MySQL clustering" -->
-<!--# set var="date" value="January 24, 2006" -->
+<!--# set var="date" value="2006-01-24" -->
 
 <!--# include file="include/top.html" -->
 

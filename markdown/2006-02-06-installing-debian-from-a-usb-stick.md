@@ -1,5 +1,5 @@
 <!--# set var="title" value="Installing Debian from a USB stick" -->
-<!--# set var="date" value="February 6, 2006" -->
+<!--# set var="date" value="2006-02-06" -->
 
 <!--# include file="include/top.html" -->
 

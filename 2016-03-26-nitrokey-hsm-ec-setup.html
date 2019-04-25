@@ -1,5 +1,5 @@
 <!--# set var="title" value="Nitrokey HSM EC setup" -->
-<!--# set var="date" value="March 26, 2016" -->
+<!--# set var="date" value="2016-03-26" -->
 
 <!--# include file="include/top.html" -->
 

@@ -1,5 +1,5 @@
 <!--# set var="title" value="5-packet TCP connection?" -->
-<!--# set var="date" value="February 3, 2009" -->
+<!--# set var="date" value="2009-02-03" -->
 
 <!--# include file="include/top.html" -->
 

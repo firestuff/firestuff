@@ -1,5 +1,5 @@
 <!--# set var="title" value="tightvnc + Java + Tab key" -->
-<!--# set var="date" value="June 13, 2006" -->
+<!--# set var="date" value="2006-06-13" -->
 
 <!--# include file="include/top.html" -->
 

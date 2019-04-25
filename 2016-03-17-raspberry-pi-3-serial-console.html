@@ -1,5 +1,5 @@
 <!--# set var="title" value="Raspberry Pi 3 + Serial Console" -->
-<!--# set var="date" value="March 17, 2016" -->
+<!--# set var="date" value="2016-03-17" -->
 
 <!--# include file="include/top.html" -->
 

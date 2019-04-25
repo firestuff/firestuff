@@ -1,5 +1,5 @@
 <!--# set var="title" value="IBM Z60m in Linux" -->
-<!--# set var="date" value="April 7, 2006" -->
+<!--# set var="date" value="2006-04-07" -->
 
 <!--# include file="include/top.html" -->
 

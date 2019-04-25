@@ -1,5 +1,5 @@
 <!--# set var="title" value="Fun with map visualizations" -->
-<!--# set var="date" value="March 26, 2010" -->
+<!--# set var="date" value="2010-03-26" -->
 
 <!--# include file="include/top.html" -->
 
