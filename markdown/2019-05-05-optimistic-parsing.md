@@ -16,7 +16,7 @@ This pattern presents an implementation challenge: how to balance efficiency wit
 * It only works in a thread-per-connection model
 * It results in extra system calls, which are [expensive](2019-05-05-syscall-efficiency.html)
 
-The solution to all three of these is the same: buffering. This can be a dirty word because it hides magic — many programmers have wondered at some point why their output didn't get written, only to discover that they're using [`fopen()`](https://en.cppreference.com/w/cpp/io/c/fopen) and didn't write a newline, or similar. Buffering used well, however, can keep execution in user space. Optimistic buffering can make control flow even easier to understand.
+The solution to all three of these is the same: buffering. This can be a dirty word because it hides magic — many programmers have wondered at some point why their output didn't get written, only to discover that they're using [`fopen()`](https://en.cppreference.com/w/cpp/io/c/fopen) and didn't write a newline, or similar. Buffering used well, however, can keep execution in user space.
 
 The biggest thing that makes such code ugly is handling running out of data while in the middle of parsing a structure/record. If you have some state (say, a header), preserving that state until the remaining data arrives is messy and error-prone, especially in a many-connections-per-thread model. However, you've already read that data from the socket/buffer, so you can't just throw it away. But what if you had a smarter buffer?
 
