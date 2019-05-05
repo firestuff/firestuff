@@ -31,9 +31,9 @@
 <li>Have everyone close the applications on their computers (but not log out) for a moment. Watch the activity lights on your switches/routers/access points. They should be mostly solid, with perhaps one or two blinks per second. Got a light that’s still flashing like mad? You might have a virus infection and a computer spewing out spam or virus attacks. Use the activity lights to trace down the source and figure out what’s causing it. Remember: virus scanners don’t work. Reinstall the machine, give the user a Limited account (as opposed to “Computer Administrator”), and refuse to install any software for them unless it’s critical to their job.</li>
 <li><p>Make sure that you only have one DHCP server on your network. More than one will likely cause some machines to get incorrect IP addresses and be unable to go anywhere. Testing for this is a little difficult. First, burn an Ubuntu CD. Reboot with the new CD in your drive, and your system should boot into the Ubuntu environment. Open a terminal window (Applications -> Accessories -> Terminal) and type:</p>
 
-<p><code>sudo ifdown eth0
+<pre><code>sudo ifdown eth0
 sudo dhclient eth0
-</code></p>
+</code></pre>
 
 <p>You should see one or more lines starting with DHCPOFFER and telling you where the offer came from. If you see more than one source of offers, you need to eliminate extra DHCP servers.</p></li>
 </ol>
@@ -45,17 +45,20 @@ sudo dhclient eth0
 <ol>
 <li><p>You’ll need the exact hostname of the service you’re trying to access. For example, if it’s slow when you try to visit http://firestuff.org/ in a web browser, then firestuff.org is the hostname. Pull out your Ubuntu CD again, and in a terminal, type:</p>
 
-<p><code>host firestuff.org</code></p>
+<pre><code>host firestuff.org
+</code></pre>
 
 <p>(obviously, replace firestuff.org with the hostname you’re concerned with)</p>
 
 <p>This converts firestuff.org into an IP address using DNS. It should take less than a second to complete. If it takes much longer, either your ISP’s DNS servers or those that provide the firestuff.org data may have problems. To narrow it down, try:</p>
 
-<p><code>host www.google.com</code></p>
+<pre><code>host www.google.com
+</code></pre>
 
 <p>If that returns instantly, then it’s the firestuff.org DNS servers that have problems; contact the administrator there. If the Google test also takes a long time, your ISP has a DNS server problem, or you have the wrong DNS servers configured in your DHCP server. Type:</p>
 
-<p><code>cat /etc/resolv.conf</code></p>
+<pre><code>cat /etc/resolv.conf
+</code></pre>
 
 <p>then call your ISP and read it to them. If the numbers aren’t what your ISP says they should be, reconfigure your DHCP server. If they are, ask what the holdup is.</p></li>
 <li>Try the same thing from other computers on your network.</li>
@@ -63,7 +66,8 @@ sudo dhclient eth0
 <li>Try plugging the same computer into different points in the network. Generally, it helps to move it up to where it has to traverse less devices (i.e. towards the “Internet”) until the problem stops. Then move it back down again, to make sure that the issue wasn’t temporary and your solution a fluke.</li>
 <li><p>Open your Ubuntu terminal and run:</p>
 
-<p><code>mtr firestuff.org</code></p>
+<pre><code>mtr firestuff.org
+</code></pre>
 
 <p>You’ll want to make the window a bit bigger. This application gives you real time timing data following the route from your network to firestuff.org. Watch the average times and loss percentages. Nothing above 0% is really acceptable loss; your ISP will probably claim that it is, but they’re lying. Remember that the numbers are cumulative; if hop 3 is dropping packets, those drops will effect hop 3 and everything beyond it. However, it’s really hop 3’s problem, and if hop 6 has a problem, it’ll be hard to see until you get the closer issue cleared up.</p></li>
 </ol>

@@ -27,12 +27,12 @@
 <li><p>Don’t store event-based data as one row per event. If you record page views or clicks in the database, aggregate that data into one row per hour, or per day. You can keep logs of events outside of the database in case you need to change aggregation and re-generate historical data, but don’t keep every event in a hot table.</p></li>
 <li><p>Stop using AUTO_INCREMENT. Instead, keep a table <a href="http://www.reddit.com/r/mysql/comments/jcw8o/database_best_practices_for_future_scalability/c2b2o4v">IdSequences</a>, and do something like: </p>
 
-<p><code>BEGIN;
+<pre><code>BEGIN;
 UPDATE IdSequences SET LastId=LAST_INSERT_ID(LastId+Increment)
- WHERE TableName='A' AND ColumnName='b';
+  WHERE TableName='A' AND ColumnName='b';
 INSERT INTO A (b, c) VALUES (LAST_INSERT_ID(), ‘foo’);
 COMMIT;
-</code></p>
+</code></pre>
 
 <p>This lets you change IdSequences later to modify your sharding scheme.</p></li>
 <li><p>Create an empty shard (new database, same schema, no data) and add test rows. Teach your application to choose which shard to talk to. This will require some method to look up a shard for the root of each hierarchy; keep all data linked to a particular root on the same shard, so you can JOIN it. At its simplest, the lookup can be (ID mod NumShards). If you have uneven shard growth, you may need an indirection table to map from virtual shard (determined by modular division with a large divisor) to physical database.</p></li>

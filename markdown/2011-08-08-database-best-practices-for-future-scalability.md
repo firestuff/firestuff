@@ -36,12 +36,11 @@ Then, things that cost development time, in increasing order of complexity:
 
 1. Stop using AUTO\_INCREMENT. Instead, keep a table [IdSequences](http://www.reddit.com/r/mysql/comments/jcw8o/database_best_practices_for_future_scalability/c2b2o4v), and do something like: 
 
-   ```BEGIN;
-   UPDATE IdSequences SET LastId=LAST_INSERT_ID(LastId+Increment)
-     WHERE TableName='A' AND ColumnName='b';
-   INSERT INTO A (b, c) VALUES (LAST_INSERT_ID(), ‘foo’);
-   COMMIT;
-   ```
+        BEGIN;
+        UPDATE IdSequences SET LastId=LAST_INSERT_ID(LastId+Increment)
+          WHERE TableName='A' AND ColumnName='b';
+        INSERT INTO A (b, c) VALUES (LAST_INSERT_ID(), ‘foo’);
+        COMMIT;
 
    This lets you change IdSequences later to modify your sharding scheme.
 

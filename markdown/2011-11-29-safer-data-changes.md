@@ -9,8 +9,9 @@ It's a great goal to avoid making manual changes to your database. It never work
 1. Check the SQL files into source control somewhere. Manual changes tend to breed more manual changes to fix the fixes, so you never know when you'll want a record of what you twiddled in the past.
 1. Include all fields from the primary key in the WHERE clause. This ensures that each statement only modifies one row. Even if this results in a huge list of changes, at least you know exactly what changed.
 1. Include as many additional gating clauses as possible, linked with AND. For example, if you have a table of products and you want to set the price to 0.99 for everything that is currently set to 1.00, do:
-   ```UPDATE Products SET Price=0.99 WHERE ProductId=2762 AND Price=1.00;
-   ```
+
+        UPDATE Products SET Price=0.99 WHERE ProductId=2762 AND Price=1.00;
+
    This ensures that if something else changes Price just before you run your change, you don't destroy that update.
 1. Record the number of rows affected by each statement, in case something unexpected happens.
 1. Use transactions sensibly. Overly huge grouping of statements can block replication, but consider whether your changes will be toxic if partially applied.
