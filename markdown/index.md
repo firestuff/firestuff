@@ -2,6 +2,7 @@
 
 <!--# include file="include/top.html" -->
 
+1. 2019-05-05: [Syscall efficiency](2019-05-05-syscall-efficiency.html)
 1. 2019-05-05: [Optimistic parsing](2019-05-05-optimistic-parsing.html)
 1. 2019-04-28: [h2load Process Request Failure](2019-04-28-h2load-process-request-failure.html)
 1. 2019-04-21: [Old code roundup](2019-04-21-old-code-roundup.html)

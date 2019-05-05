@@ -12,11 +12,11 @@ I've been writing a [FastCGI](https://www.mit.edu/~yandros/doc/specs/fcgi-spec.h
 
 This pattern presents an implementation challenge: how to balance efficiency with implementation complexity. It seems easy to read and parse each structure/record sequentially, but there are pitfalls and fundamental problems:
 
-* You have to consistently handle interrupted system calls (EINTR) and [short reads](TODO) for every read()
+* You have to consistently handle interrupted system calls (`EINTR`) and short reads for every `read()`
 * It only works in a thread-per-connection model
-* It results in extra system calls, which are [expensive](TODO)
+* It results in extra system calls, which are [expensive](2019-05-05-syscall-efficiency.html)
 
-The solution to all three of these is the same: buffering. This can be a dirty word because it hides magic — many programmers have wondered at some point why their output didn't get written, only to discover that they're using [fopen()](https://en.cppreference.com/w/cpp/io/c/fopen) and didn't write a newline, or similar. Buffering used well, however, can keep execution in user space. Optimistic buffering can make control flow even easier to understand.
+The solution to all three of these is the same: buffering. This can be a dirty word because it hides magic — many programmers have wondered at some point why their output didn't get written, only to discover that they're using [`fopen()`](https://en.cppreference.com/w/cpp/io/c/fopen) and didn't write a newline, or similar. Buffering used well, however, can keep execution in user space. Optimistic buffering can make control flow even easier to understand.
 
 The biggest thing that makes such code ugly is handling running out of data while in the middle of parsing a structure/record. If you have some state (say, a header), preserving that state until the remaining data arrives is messy and error-prone, especially in a many-connections-per-thread model. However, you've already read that data from the socket/buffer, so you can't just throw it away. But what if you had a smarter buffer?
 
@@ -49,9 +49,9 @@ Consider:
 
 You still keep state between calls to this function, but it's entirely inside the buffer.
 
-Internally, the buffer object has two pointers: one to the next byte to read, and one to the byte to rewind to. ResetRead() moves the read pointer to the rewind pointer. Commit() moves the rewind pointer to the read pointer. Consume() moves any data starting at the commit pointer to the start of the buffer, then moves the pointers back to match.
+Internally, the buffer object has two pointers: one to the next byte to read, and one to the byte to rewind to. `ResetRead()` moves the read pointer to the rewind pointer. `Commit()` moves the rewind pointer to the read pointer. `Consume()` moves any data starting at the commit pointer to the start of the buffer, then moves the pointers back to match.
 
-This is "optimistic" because it assumes that most of the time, we'll have a whole record to parse in the buffer. If data arrives one byte at a time, we'll waste lots of effort re-parsing the early bytes. That's not the way it works in reality for many protocols, though, and for things like FastCGI this can parse multiple records before it calls Consume(), minimizing not only syscalls but data copies.
+This is "optimistic" because it assumes that most of the time, we'll have a whole record to parse in the buffer. If data arrives one byte at a time, we'll waste lots of effort re-parsing the early bytes. That's not the way it works in reality for many protocols, though, and for things like FastCGI this can parse multiple records before it calls `Consume()`, minimizing not only syscalls but data copies.
 
 In exchange for that risk of multiple re-parsing, we get a relatively clean, readable implementation. The `break` statements are probably the ugliest, but function return error handling patterns are a topic for another day.
 
