@@ -2,6 +2,7 @@
 
 <!--# include file="include/top.html" -->
 
+1. 2021-07-18: [Elegant Expandable Elements](2021-07-18-elegant-expandable-elements.html)
 1. 2019-11-25: [In praise of blame](2019-11-25-in-praise-of-blame.html)
 1. 2019-05-05: [Syscall efficiency](2019-05-05-syscall-efficiency.html)
 1. 2019-05-05: [Optimistic parsing](2019-05-05-optimistic-parsing.html)
